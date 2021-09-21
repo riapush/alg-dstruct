@@ -4,8 +4,6 @@
 #include <math.h>
 #include "laba_header.h"
 
-#pragma warning(disable : 4996)
-
 
 int CharToInt(char a) {
 	if (a >= '0' && a <= '9') {
@@ -37,6 +35,9 @@ file_line StringToStructure(char* line) {
 	int j = 0;
 	file_line element = { 0 };
 
+	// string.h strtok can separate string into multiple based on character delimiters
+	// in this case delimiter is ','
+	// WARNING damages initial string
 	// read date
 	while (line[i] != ',') {
 		j++;
@@ -75,7 +76,7 @@ file_line StringToStructure(char* line) {
 	j = 0;
 	//read hours as array of chars
 	char* buf = NULL;
-	while (line[i] != '\n') {
+	while (line[i] != '\n' && line[i] != '\0') {
 		i++;
 		j++;
 		buf = (char*)realloc(buf, j * sizeof(char));
@@ -88,8 +89,7 @@ file_line StringToStructure(char* line) {
 	return element; // "next" field is gonna be defined in FindElementPosition function
 }
 
-
-
+// string.h strcmp does string comparison, result is <0 if first string is "less", 0 if strings are equal and >0 if first string is "greater"
 //return: 1 if strings are equal, 2 if the first string should be put before second when sort in alphabet order, else 0
 int CompareStrings(char* A, char* B) {
 	int A_len = strlen(A);
@@ -134,6 +134,10 @@ int HeadSmaller(file_line* head, file_line* element) {
 	return 0;
 }
 
+// PutBefore and PutTheVeryLast can be generalized by using
+// curr->next = prev->next;
+// prev->next = curr;
+// no need for double pointers
 void PutBefore(file_line** prev, file_line** curr, file_line** next) {
 	(*prev)->next = (*curr);
 	(*curr)->next = (*next);
@@ -224,37 +228,23 @@ void FindElementPosition(int element_counter, file_line* element, file_line* oth
 }
 
 
-file_line* ReadFile(char* filename) {
+// changed filename to be const so there's no C++ warning
+// also its generally useful to use const if there's no plan to change something to avoid accidental changes
+file_line* ReadFile(const char* filename) {
 	FILE* txt = fopen(filename, "r");
 	if (!txt) {
-		printf("file did not open");
-		return;
+		perror("Unable to open file in ReadFile");
+		return NULL;
 	}
-	char letter; // symbol we read
-	int i = 0;
-	char* line = NULL;
+	char line[200];
 	int elements_counter = 0;
-	file_line* head = NULL;
+	file_line* head = malloc(sizeof(file_line));
 
-	while ((fscanf_s(txt, "%c", &letter, sizeof(char))) > 0) {
-		i++;
-		line = (char*)realloc(line, i * sizeof(char));
-		if (line != NULL) {
-			line[i - 1] = letter;
-		}
-		while ((fscanf_s(txt, "%c", &letter)) != '\n') { // read line by line
-			i++;
-			line = (char*)realloc(line, i * sizeof(char));
-			if (line != NULL) {
-				line[i - 1] = letter;
-			}
-		}
-		i++;
-		line = (char*)realloc(line, i * sizeof(char));
-		line[i - 1] = '\0';
-
-		file_line ele = StringToStructure(line);
-		file_line* element = &ele;
+	// [^\n] reads until newline
+	// 199 is character limit
+	while ((fscanf(txt, "%199[^\n]", line))) {
+		file_line* element = malloc(sizeof(file_line*));
+		*element = StringToStructure(line);
 		if (elements_counter == 0) {
 			head = element;
 		}
@@ -267,8 +257,6 @@ file_line* ReadFile(char* filename) {
 			FindElementPosition(elements_counter, element, head);
 		}
 		elements_counter++;
-		free(line);
-		i = 0;
 	}
 	return head;
 }

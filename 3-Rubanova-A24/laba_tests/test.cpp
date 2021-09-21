@@ -1,5 +1,5 @@
-#include "pch.h"
 #include "laba_header.h"
+#include <gtest/gtest.h>
 
 
 TEST(CharToInt, Char7toInt7_expectedInt7) {
@@ -105,8 +105,9 @@ TEST(FindElementPosition, ElementAfterHeadBeforeOther_ExpectedElementNextEl2Head
 }
 
 TEST(ReadFile, Read4LinesinFile_ExpectedValidVal) {
-	char* filename = "D:\\Git\GitHub\alg-dstruct\3-Rubanova-A24\ReadFileTest.txt";
+	char* filename = "/home/wumi/Documents/C/Help/LeraRepo/alg-dstruct/3-Rubanova-A24/ReadFileTest.txt";
 	file_line* head = ReadFile(filename);
+	ASSERT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date,"1988-09-15");
 	EXPECT_STREQ(head->surname, "Smith");
 	EXPECT_STREQ(head->name, "Adam");

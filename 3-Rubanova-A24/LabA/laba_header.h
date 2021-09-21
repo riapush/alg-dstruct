@@ -32,7 +32,7 @@ void GoOn(file_line** previous, file_line** other_element);
 
 void FindElementPosition(int element_counter, file_line* element, file_line* other_element);
 
-file_line* ReadFile(char* filename);
+file_line* ReadFile(const char* filename);
 
 void PrintInfo(file_line* list, int n);
 
