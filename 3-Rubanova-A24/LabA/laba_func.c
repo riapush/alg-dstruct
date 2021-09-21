@@ -75,7 +75,7 @@ file_line StringToStructure(char* line) {
 	j = 0;
 	//read hours as array of chars
 	char* buf = NULL;
-	while (line[i] != '\n') {
+	while (line[i] != '\0') {
 		i++;
 		j++;
 		buf = (char*)realloc(buf, j * sizeof(char));
@@ -114,10 +114,10 @@ int CompareStrings(char* A, char* B) {
 }
 
 
-/*if element needs to be put first, we need to change pointer to the head of a list
-return: 1 if head smaller, 0 else
-*/
 int HeadSmaller(file_line* head, file_line* element) {
+	/*if element needs to be put first, we need to change pointer to the head of a list
+	return: 1 if head smaller, 0 else
+	*/
 	if (element->hours > head->hours) {
 		return 1;
 	}
@@ -158,11 +158,6 @@ void FindElementPosition(int element_counter, file_line* element, file_line* oth
 		return;
 	}
 	else {
-		// we can not to compare to the head bc we are sure element needs to be put after so we skip head
-		/*previous = other_element;
-		other_element = other_element->next;
-		i++;*/
-
 		do {
 			if (element->hours > other_element->hours) {
 				PutBefore(&previous, &element, &other_element);
@@ -223,38 +218,21 @@ void FindElementPosition(int element_counter, file_line* element, file_line* oth
 	}
 }
 
-
-file_line* ReadFile(char* filename) {
+file_line* ReadFile(const char* filename) {
 	FILE* txt = fopen(filename, "r");
 	if (!txt) {
-		printf("file did not open");
-		return;
+		printf("Unable to open file in ReadFile");
+		return NULL;
 	}
-	char letter; // symbol we read
-	int i = 0;
-	char* line = NULL;
+	char line[200];
 	int elements_counter = 0;
-	file_line* head = NULL;
+	file_line* head = malloc(sizeof(file_line));
 
-	while ((fscanf_s(txt, "%c", &letter, sizeof(char))) > 0) {
-		i++;
-		line = (char*)realloc(line, i * sizeof(char));
-		if (line != NULL) {
-			line[i - 1] = letter;
-		}
-		while ((fscanf_s(txt, "%c", &letter)) != '\n') { // read line by line
-			i++;
-			line = (char*)realloc(line, i * sizeof(char));
-			if (line != NULL) {
-				line[i - 1] = letter;
-			}
-		}
-		i++;
-		line = (char*)realloc(line, i * sizeof(char));
-		line[i - 1] = '\0';
-
-		file_line ele = StringToStructure(line);
-		file_line* element = &ele;
+	// [^\n] reads until newline
+	// 199 is character limit
+	while ((fscanf(txt, "%199[^\n]", line)) > 0) {
+		file_line* element = malloc(sizeof(file_line*));
+		*element = StringToStructure(line);
 		if (elements_counter == 0) {
 			head = element;
 		}
@@ -267,11 +245,58 @@ file_line* ReadFile(char* filename) {
 			FindElementPosition(elements_counter, element, head);
 		}
 		elements_counter++;
-		free(line);
-		i = 0;
 	}
 	return head;
 }
+
+//file_line* ReadFile(const char* filename) {
+//	FILE* txt = fopen(filename, "r");
+//	if (!txt) {
+//		printf("Unable to open file in ReadFile");
+//		return NULL;
+//	}
+//	char letter; // symbol we read
+//	int i = 0;
+//	char line[100];
+//	int elements_counter = 0;
+//	file_line* head = malloc(sizeof(file_line));
+//
+//	while ((fscanf_s(txt, "%c", &letter, sizeof(char))) > 0) {
+//		i++;
+//		if (line != NULL) {
+//			line[i - 1] = letter;
+//		}
+//		while ((fscanf_s(txt, "%c", &letter)) > 0 && letter != '\n') { // read line by line
+//			i++;
+//			if (line != NULL) {
+//				line[i - 1] = letter;
+//			}
+//		}
+//		i++;
+//		line[i - 1] = '\0';
+//
+//		// we have read file, now we fing the right position in the list
+//		file_line* element = malloc(sizeof(file_line*));
+//		*element = StringToStructure(line);
+//		if (elements_counter == 0) {
+//			head = element;
+//			elements_counter++;
+//			i = 0;
+//			continue;
+//		}
+//
+//		if (HeadSmaller(head, element)) {
+//			element->next = head;
+//			head = element;
+//		}
+//		else {
+//			FindElementPosition(elements_counter, element, head);
+//		}
+//		elements_counter++;
+//		i = 0;
+//	}
+//	return head;
+//}
 
 
 void PrintInfo(file_line* list, int n) {

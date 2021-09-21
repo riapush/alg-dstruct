@@ -2,7 +2,7 @@
 #include "laba_header.h"
 
 
-TEST(CharToInt, Char7toInt7_expectedInt7) {
+TEST(CharToInt, Char7toInt7_ExpectedInt7) {
 	char a = '7';
 	int b = CharToInt(a);
 	EXPECT_EQ(b, 7);
@@ -29,7 +29,7 @@ TEST(MakeNumOutOfDigits, Char1toInt1_ExpectedInt1) {
 }
 
 TEST(StringToStructure, LineToStructure_ExpectedValidVal) {
-	char* a = "2021-09-10,Ivanov,Ivan,8\n";
+	char* a = "2021-09-10,Ivanov,Ivan,8";
 	file_line element = StringToStructure(a);
 	EXPECT_STREQ(element.date, "2021-09-10");
 	EXPECT_STREQ(element.surname, "Ivanov");
@@ -105,26 +105,26 @@ TEST(FindElementPosition, ElementAfterHeadBeforeOther_ExpectedElementNextEl2Head
 }
 
 TEST(ReadFile, Read4LinesinFile_ExpectedValidVal) {
-	char* filename = "D:\\Git\GitHub\alg-dstruct\3-Rubanova-A24\ReadFileTest.txt";
+	char* filename = "D:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\ReadFileTest.txt";
 	file_line* head = ReadFile(filename);
 	EXPECT_STREQ(head->date,"1988-09-15");
 	EXPECT_STREQ(head->surname, "Smith");
 	EXPECT_STREQ(head->name, "Adam");
 	EXPECT_EQ(head->hours, 15);
-//	head = head->next;
-//	EXPECT_STREQ(head->date, "2021-09-13");
-//	EXPECT_STREQ(head->surname, "Alexeeva");
-//	EXPECT_STREQ(head->name, "Alla");
-//	EXPECT_EQ(head->hours, 8);
-//	head = head->next;
-//	EXPECT_STREQ(head->date, "2020-12-09");
-//	EXPECT_STREQ(head->surname, "Ivanov");
-//	EXPECT_STREQ(head->name, "Ivan");
-//	EXPECT_EQ(head->hours, 7);
-//	head = head->next;
-//	EXPECT_STREQ(head->date, "2015-04-13");
-//	EXPECT_STREQ(head->surname, "Rubanova");
-//	EXPECT_STREQ(head->name, "Valeria");
-//	EXPECT_EQ(head->hours, 4);
-//	EXPECT_EQ(head->next, NULL);
+	head = head->next;
+	//EXPECT_STREQ(head->date, "2021-09-13");
+	//EXPECT_STREQ(head->surname, "Alexeeva");
+	//EXPECT_STREQ(head->name, "Alla");
+	//EXPECT_EQ(head->hours, 8);
+	//head = head->next;
+	//EXPECT_STREQ(head->date, "2020-12-09");
+	//EXPECT_STREQ(head->surname, "Ivanov");
+	//EXPECT_STREQ(head->name, "Ivan");
+	//EXPECT_EQ(head->hours, 7);
+	//head = head->next;
+	//EXPECT_STREQ(head->date, "2015-04-13");
+	//EXPECT_STREQ(head->surname, "Rubanova");
+	//EXPECT_STREQ(head->name, "Valeria");
+	//EXPECT_EQ(head->hours, 4);
+	//EXPECT_EQ(head->next, NULL);
 }
