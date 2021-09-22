@@ -14,27 +14,27 @@ typedef struct file_line {
 	struct file_line* next;
 } file_line;
 
-int CharToInt(char a);
+int charToInt(char a);
 
-void MakeNumOutOfDigits(file_line* element, char* buf);
+void makeNumOutOfDigits(file_line* element, char* buf);
 
-file_line StringToStructure(char* line);
+file_line stringToStructure(char* line);
 
-int CompareStrings(char* A, char* B);
+int compareStrings(char* A, char* B);
 
-int HeadSmaller(file_line* head, file_line* element);
+int headSmaller(file_line* head, file_line* element);
 
-void PutBefore(file_line** prev, file_line** curr, file_line** next);
+void putBefore(file_line** prev, file_line** curr, file_line** next);
 
-void PutTheVeryLast(file_line** element, file_line** other_element);
+void putTheVeryLast(file_line** element, file_line** other_element);
 
-void GoOn(file_line** previous, file_line** other_element);
+void goOn(file_line** previous, file_line** other_element);
 
-void FindElementPosition(int element_counter, file_line* element, file_line* other_element);
+void findElementPosition(int element_counter, file_line* element, file_line* other_element);
 
-file_line* ReadFile(char* filename);
+file_line* readFile(char* filename);
 
-void PrintInfo(file_line* list, int n);
+void printInfo(file_line* list, int n);
 
 #ifdef __cplusplus
 }
