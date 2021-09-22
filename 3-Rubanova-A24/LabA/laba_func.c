@@ -230,11 +230,13 @@ file_line* ReadFile(const char* filename) {
 
 	// [^\n] reads until newline
 	// 199 is character limit
-	while ((fscanf(txt, "%199[^\n]", line)) > 0) {
+	while ((fgets(line, sizeof(line), txt))) {
 		file_line* element = malloc(sizeof(file_line*));
 		*element = StringToStructure(line);
 		if (elements_counter == 0) {
 			head = element;
+			elements_counter++;
+			continue;
 		}
 
 		if (HeadSmaller(head, element)) {
