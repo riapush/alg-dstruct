@@ -242,7 +242,8 @@ file_line* ReadFile(const char* filename) {
 
 	// [^\n] reads until newline
 	// 199 is character limit
-	while ((fscanf(txt, "%199[^\n]", line))) {
+	// \n after string is needed to read more than one line (consumes leftover newline character)
+	while (fscanf(txt, "%199[^\n]\n", line)>0) {
 		file_line* element = malloc(sizeof(file_line*));
 		*element = StringToStructure(line);
 		if (elements_counter == 0) {
