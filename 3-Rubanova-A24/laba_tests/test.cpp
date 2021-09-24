@@ -55,6 +55,9 @@ TEST_F(StringToStructureMemory, LineToStructure_ExpectedValidVal) {
 	EXPECT_STREQ(element.surname, "Ivanov");
 	EXPECT_STREQ(element.name, "Ivan");
 	EXPECT_EQ(element.hours, 8);
+	free(element.date);
+	free(element.surname);
+	free(element.name);
 }
 
 TEST(compareStrings, equalStrings_expected1) {
