@@ -1,6 +1,25 @@
 #include "pch.h"
 #include "laba_header.h"
 
+class TestMemory : public ::testing::Test {
+protected:
+	_CrtMemState s1, s2, s3;
+
+	void SetUp() {
+		_CrtMemCheckpoint(&s1);
+	}
+
+	void TearDown() {
+		_CrtMemCheckpoint(&s2);
+		if (_CrtMemDifference(&s3, &s1, &s2)) {
+			_CrtMemDumpStatistics(&s3);
+			FAIL();
+		}
+	}
+};
+
+class StringToStructureMemory : public TestMemory {};
+
 
 TEST(charToInt, char7toInt7_expectedInt7) {
 	char a = '7';
@@ -28,9 +47,10 @@ TEST(makeNumOutOfDigits, char1toInt1_expectedInt1) {
 	EXPECT_TRUE(element.hours == 1);
 }
 
-TEST(stringToStructure, lineToStructure_expectedValidVal) {
+TEST_F(StringToStructureMemory, LineToStructure_ExpectedValidVal) {
 	char* a = "2021-09-10,Ivanov,Ivan,8\n";
-	file_line element = stringToStructure(a);
+	file_line head = { "2020-12-09", "Ivanov", "Sasha",8,NULL};
+	file_line element = stringToStructure(a, &head);
 	EXPECT_STREQ(element.date, "2021-09-10");
 	EXPECT_STREQ(element.surname, "Ivanov");
 	EXPECT_STREQ(element.name, "Ivan");
@@ -127,4 +147,14 @@ TEST(readFile, read4LinesinFile_expectedValidVal) {
 	EXPECT_STREQ(head->name, "Valeria");
 	EXPECT_EQ(head->hours, 4);
 	EXPECT_TRUE(head->next == NULL);
+}
+
+int main(int* argc, char** argv) {
+	int argn = 1;
+	testing::InitGoogleTest(&argn, argv);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
+	RUN_ALL_TESTS();
+	//_CrtDumpMemoryLeaks();
+	return 0;
 }

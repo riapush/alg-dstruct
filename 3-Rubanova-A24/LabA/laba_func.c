@@ -30,63 +30,194 @@ void makeNumOutOfDigits(file_line* element, char* buf) {
 	}
 }
 
-
-file_line stringToStructure(char* line) {
-	int len = strlen(line);
+file_line stringToStructure(char* line, file_line* head) {
 	int i = 0;
 	int j = 0;
 	file_line element = { 0 };
 
 	// read date
+	element.date = (char*)malloc(11 * sizeof(char));
+	if (element.date == NULL) {
+		printf("Memory allocation error in stringToStructure");
+		destroyList(head);
+		return;
+	}
 	while (line[i] != ',') {
 		j++;
 		i++;
-		element.date = (char*)realloc(element.date, j * sizeof(char));
 		element.date[j - 1] = line[i - 1];
 	}
 	j++;
-	element.date = (char*)realloc(element.date, j * sizeof(char));
 	element.date[j - 1] = '\0';
 	i++; //skip ','
-	j = 0;
+
 	//read surname
+	j = 0;
+	int k = i;
+	while (line[k] != ',') {
+		j++;
+		k++;
+	}
+	element.surname = (char*)malloc((j+1) * sizeof(char));
+	j = 0;
 	while (line[i] != ',') {
 		i++;
 		j++;
-		element.surname = (char*)realloc(element.surname, j * sizeof(char));
 		element.surname[j - 1] = line[i - 1];
 	}
 	j++;
-	element.surname = (char*)realloc(element.surname, j * sizeof(char));
 	element.surname[j - 1] = '\0';
 	i++; //skip ','
-	j = 0;
+
 	//read name
+	j = 0;
+	k = i;
+	while (line[k] != ',') {
+		j++;
+		k++;
+	}
+	element.name = (char*)malloc((j + 1) * sizeof(char));
+	if (element.name == NULL) {
+		printf("Memory allocation error in stringToStructure");
+		destroyList(head);
+		return;
+	}
+	j = 0;
 	while (line[i] != ',') {
 		i++;
 		j++;
-		element.name = (char*)realloc(element.name, j * sizeof(char));
 		element.name[j - 1] = line[i - 1];
 	}
 	j++;
-	element.name = (char*)realloc(element.name, j * sizeof(char));
 	element.name[j - 1] = '\0';
 	i++; //skip ','
+
 	j = 0;
+	k = i;
 	//read hours as array of chars
 	char* buf = NULL;
-	while (line[i] != '\n' && line[i] != '\0') {
+	while (line[k] != '\n' && line[k] != '\0') {
+		k++;
+		j++;
+	}
+	buf = (char*)malloc((j+1) * sizeof(char));
+	if (buf == NULL) {
+		printf("Memory allocation error in stringToStructure");
+		destroyList(head);
+		return;
+	}
+	j = 0;
+	while (i <= k && line[i]!='\n' && line[i]!='\0') {
 		i++;
 		j++;
-		buf = (char*)realloc(buf, j * sizeof(char));
 		buf[j - 1] = line[i - 1];
 	}
 	j++;
-	buf = (char*)realloc(buf, j * sizeof(char));
 	buf[j - 1] = '\0';
 	makeNumOutOfDigits(&element, buf);
+	free(buf);
 	return element; // "next" field is gonna be defined in FindElementPosition function
 }
+
+
+//file_line stringToStructure(char* line, file_line* head) {
+//	int len = strlen(line);
+//	int i = 0;
+//	int j = 0;
+//	file_line element = { 0 };
+//
+//	// read date
+//	while (line[i] != ',') {
+//		j++;
+//		i++;
+//		element.date = (char*)realloc(element.date, j * sizeof(char));
+//		if (element.date == NULL) {
+//			printf("Memory allocation error in stringToStructure");
+//			destroyList(head);
+//			return;
+//		}
+//		element.date[j - 1] = line[i - 1];
+//	}
+//	j++;
+//	element.date = (char*)realloc(element.date, j * sizeof(char));
+//	if (element.date == NULL) {
+//		printf("Memory allocation error in stringToStructure");
+//		destroyList(head);
+//		return;
+//	}
+//	element.date[j - 1] = '\0';
+//	i++; //skip ','
+//	j = 0;
+//	//read surname
+//	while (line[i] != ',') {
+//		i++;
+//		j++;
+//		element.surname = (char*)realloc(element.surname, j * sizeof(char));
+//		if (element.surname == NULL) {
+//			printf("Memory allocation error in stringToStructure");
+//			destroyList(head);
+//			return;
+//		}
+//		element.surname[j - 1] = line[i - 1];
+//	}
+//	j++;
+//	element.surname = (char*)realloc(element.surname, j * sizeof(char));
+//	if (element.surname == NULL) {
+//		printf("Memory allocation error in stringToStructure");
+//		destroyList(head);
+//		return;
+//	}
+//	element.surname[j - 1] = '\0';
+//	i++; //skip ','
+//	j = 0;
+//	//read name
+//	while (line[i] != ',') {
+//		i++;
+//		j++;
+//		element.name = (char*)realloc(element.name, j * sizeof(char));
+//		if (element.name == NULL) {
+//			printf("Memory allocation error in stringToStructure");
+//			destroyList(head);
+//			return;
+//		}
+//		element.name[j - 1] = line[i - 1];
+//	}
+//	j++;
+//	element.name = (char*)realloc(element.name, j * sizeof(char));
+//	if (element.name == NULL) {
+//		printf("Memory allocation error in stringToStructure");
+//		destroyList(head);
+//		return;
+//	}
+//	element.name[j - 1] = '\0';
+//	i++; //skip ','
+//	j = 0;
+//	//read hours as array of chars
+//	char* buf = NULL;
+//	while (line[i] != '\n' && line[i] != '\0') {
+//		i++;
+//		j++;
+//		buf = (char*)realloc(buf, j * sizeof(char));
+//		if (buf == NULL) {
+//			printf("Memory allocation error in stringToStructure");
+//			destroyList(head);
+//			return;
+//		}
+//		buf[j - 1] = line[i - 1];
+//	}
+//	j++;
+//	buf = (char*)realloc(buf, j * sizeof(char));
+//	if (buf == NULL) {
+//		printf("Memory allocation error in stringToStructure");
+//		destroyList(head);
+//		free(buf);
+//		return;
+//	}
+//	buf[j - 1] = '\0';
+//	makeNumOutOfDigits(&element, buf);
+//	free(buf);
+//	return element; // "next" field is gonna be defined in FindElementPosition function
+//}
 
 
 
@@ -221,18 +352,27 @@ void findElementPosition(int element_counter, file_line* element, file_line* oth
 file_line* readFile(const char* filename) {
 	FILE* txt = fopen(filename, "r");
 	if (!txt) {
-		printf("Unable to open file in ReadFile");
+		printf("Unable to open file in readFile");
 		return NULL;
 	}
 	char line[200];
 	int elements_counter = 0;
 	file_line* head = malloc(sizeof(file_line));
-
+	if (head == NULL) {
+		printf("Memory allocation error in readFile");
+		return;
+	}
 	// [^\n] reads until newline
 	// 199 is character limit
 	while ((fgets(line, sizeof(line), txt))) {
 		file_line* element = malloc(sizeof(file_line));
-		*element = stringToStructure(line);
+		if (element == NULL) {
+			printf("Memory allocation error in stringToStructure");
+			free(element);
+			destroyList(head);
+			return;
+		}
+		*element = stringToStructure(line, head);
 		if (elements_counter == 0) {
 			head = element;
 			elements_counter++;
@@ -265,5 +405,15 @@ void printInfo(file_line* list, int n) {
 			}
 			printf("\n");
 		}
+	}
+}
+
+void destroyList(file_line* head) {
+	file_line* A = head->next;
+	free(head);
+	while (A != NULL) {
+		file_line B = *A;
+		free(A);
+		A = B.next;
 	}
 }

@@ -18,7 +18,9 @@ int charToInt(char a);
 
 void makeNumOutOfDigits(file_line* element, char* buf);
 
-file_line stringToStructure(char* line);
+void destroyList(file_line* head);
+
+file_line stringToStructure(char* line, file_line* head);
 
 int compareStrings(char* A, char* B);
 
