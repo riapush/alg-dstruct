@@ -49,7 +49,7 @@ TEST(makeNumOutOfDigits, char1toInt1_expectedInt1) {
 
 TEST_F(StringToStructureMemory, LineToStructure_ExpectedValidVal) {
 	char* a = "2021-09-10,Ivanov,Ivan,8\n";
-	file_line head = { "2020-12-09", "Ivanov", "Sasha",8,NULL};
+	file_line head = { "2020-12-09", "Ivanov", "Sasha", 8, NULL};
 	file_line element = stringToStructure(a, &head);
 	EXPECT_STREQ(element.date, "2021-09-10");
 	EXPECT_STREQ(element.surname, "Ivanov");
@@ -79,78 +79,105 @@ TEST(compareStrings, bBeforeA_expected0) {
 	EXPECT_TRUE(a == 0);
 }
 
-TEST(headSmaller, headHoursSmaller_expected1) {
-	file_line head = { "2020-12-09","Ivanov","Ivan",8 };
-	file_line element = { "2020-12-09","Ivanov","Ivan",12 };
-	EXPECT_EQ(headSmaller(&head, &element), 1);
+TEST(oneBeforeOther, headHoursSmaller_expected1) {
+	file_line head = { "2020-12-09", "Ivanov", "Ivan", 8 };
+	file_line element = { "2020-12-09", "Ivanov", "Ivan", 12 };
+	EXPECT_EQ(oneBeforeOther(&head, &element), 1);
 }
 
-TEST(headSmaller, headHoursBigger_expected0) {
-	file_line head = { "2020-12-09","Ivanov","Ivan",4 };
-	file_line element = { "2020-12-09","Ivanov","Ivan",2 };
-	EXPECT_EQ(headSmaller(&head, &element), 0);
+TEST(oneBeforeOther, headHoursBigger_expected0) {
+	file_line head = { "2020-12-09", "Ivanov", "Ivan", 4 };
+	file_line element = { "2020-12-09", "Ivanov", "Ivan", 2 };
+	EXPECT_EQ(oneBeforeOther(&head, &element), 0);
 }
 
-TEST(headSmaller, equalHoursHeadSurnameBefore_expected0) {
-	file_line head = { "2020-12-09","Abakanov","Ivan",5 };
-	file_line element = { "2020-12-09","Bykov","Ivan",5 };
-	EXPECT_EQ(headSmaller(&head, &element), 0);
+TEST(oneBeforeOther, equalHoursHeadSurnameBefore_expected0) {
+	file_line head = { "2020-12-09", "Abakanov", "Ivan", 5 };
+	file_line element = { "2020-12-09", "Bykov", "Ivan", 5 };
+	EXPECT_EQ(oneBeforeOther(&head, &element), 0);
 }
 
-TEST(headSmaller, EqualHoursAndSurnamesElementNameBefore_expected1) {
-	file_line head = { "2020-12-09","Ivanova","Boris",4 };
-	file_line element = { "2020-12-09","Ivanova","Alla",4 };
-	EXPECT_EQ(headSmaller(&head, &element), 1);
+TEST(oneBeforeOther, EqualHoursAndSurnamesElementNameBefore_expected1) {
+	file_line head = { "2020-12-09", "Ivanova", "Boris", 4 };
+	file_line element = { "2020-12-09", "Ivanova", "Alla", 4 };
+	EXPECT_EQ(oneBeforeOther(&head, &element), 1);
 }
 
 TEST(findElementPosition, elementCounterEquals0_expectedElementNextNULL) {
-	file_line element = { "2020-08-21", "Rubanov" , "Boris", 8};
+	file_line element = { "2020-08-21", "Rubanov", "Boris", 8};
 	findElementPosition(0, &element, &element);
 	EXPECT_TRUE(element.next == NULL);
 }
 
 TEST(findElementPosition, elementAfterHead_expectedElementNextNULLHeadNextElement) {
-	file_line head = { "2021-03-12","Ivanov", "Ivan", 15,NULL };
-	file_line element = { "2021-03-12","Ivanov", "Ivan", 3 };
+	file_line head = { "2021-03-12", "Ivanov", "Ivan", 15, NULL };
+	file_line element = { "2021-03-12", "Ivanov", "Ivan", 3 };
 	findElementPosition(1, &element, &head);
 	EXPECT_TRUE(element.next == NULL);
 	EXPECT_TRUE(head.next == &element);
 }
 
 TEST(findElementPosition, elementAfterHeadBeforeOther_expectedElementNextEl2HeadNextElement) {
-	file_line el3 = { "2021-03-12","Ivanov", "Ivan", 3,NULL };
-	file_line el2 = { "2021-03-12","Ivanov", "Ivan", 4,&el3 };
-	file_line el1 = { "2021-03-12","Ivanov", "Ivan", 15,&el2 };
-	file_line element = { "2021-03-12","Ivanov", "Ivan", 7 };
+	file_line el3 = { "2021-03-12", "Ivanov", "Ivan", 3, NULL };
+	file_line el2 = { "2021-03-12", "Ivanov", "Ivan", 4, &el3 };
+	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
+	file_line element = { "2021-03-12", "Ivanov", "Ivan", 7 };
 	findElementPosition(3, &element, &el1);
-	EXPECT_TRUE(element.next == &el2);
 	EXPECT_TRUE(el1.next == &element);
+	EXPECT_TRUE(element.next == &el2);
+	EXPECT_TRUE(el2.next == &el3);
+	EXPECT_TRUE(el3.next == NULL);
+}
+
+TEST(readFile, nonExistingFile_expectedNULL) {
+	char* path = "C:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\ReadFileTest.txt";
+	file_line* head = readFile(path);
+	EXPECT_TRUE(head == NULL);
+}
+
+TEST(readFile, emptyFile_expectedNULL) {
+	char* filename = "D:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\EmptyFileTest.txt";
+	file_line* head = readFile(filename);
+	EXPECT_TRUE(head == NULL);
 }
 
 TEST(readFile, read4LinesinFile_expectedValidVal) {
 	char* filename = "D:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\ReadFileTest.txt";
 	file_line* head = readFile(filename);
-	EXPECT_STREQ(head->date,"1988-09-15");
+	EXPECT_TRUE(head != NULL);
+	EXPECT_STREQ(head->date, "1988-09-15");
 	EXPECT_STREQ(head->surname, "Smith");
 	EXPECT_STREQ(head->name, "Adam");
 	EXPECT_EQ(head->hours, 15);
 	head = head->next;
+	EXPECT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2021-09-13");
 	EXPECT_STREQ(head->surname, "Alexeeva");
 	EXPECT_STREQ(head->name, "Alla");
 	EXPECT_EQ(head->hours, 8);
 	head = head->next;
+	EXPECT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2020-12-09");
 	EXPECT_STREQ(head->surname, "Ivanov");
 	EXPECT_STREQ(head->name, "Ivan");
 	EXPECT_EQ(head->hours, 7);
 	head = head->next;
+	EXPECT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2015-04-13");
 	EXPECT_STREQ(head->surname, "Rubanova");
 	EXPECT_STREQ(head->name, "Valeria");
 	EXPECT_EQ(head->hours, 4);
 	EXPECT_TRUE(head->next == NULL);
 }
+
+TEST(findPerson, threestrings_Expected) {
+	file_line el3 = { "2021-03-12", "Ivanov", "Ivan", 3, NULL };
+	file_line el2 = { "2021-03-12", "Ivanov", "Ivan", 4, &el3 };
+	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
+	int sum = findPerson(&el1, "Ivanov", "Ivan");
+	EXPECT_TRUE(sum == 22);
+}
+
 
 int main(int* argc, char** argv) {
 	int argn = 1;

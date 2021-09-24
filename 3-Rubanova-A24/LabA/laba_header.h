@@ -24,7 +24,9 @@ file_line stringToStructure(char* line, file_line* head);
 
 int compareStrings(char* A, char* B);
 
-int headSmaller(file_line* head, file_line* element);
+int findPerson(file_line* list, char* surname, char* name);
+
+int oneBeforeOther(file_line* head, file_line* element);
 
 void putBefore(file_line** prev, file_line** curr, file_line** next);
 
