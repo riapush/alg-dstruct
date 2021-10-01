@@ -32,17 +32,24 @@ void makeNumOutOfDigits(file_line* element, char* buf) {
 
 
 // func search for comma and allocate memory for found word
-char* searchForComma(char* line, int* j, int* k) {
+char* searchForComma(char* line, int* k, const int i, file_line* head) {
+	int j = 0;
 	while (line[(*k)] != ',' && line[(*k)] != '\n' && line[(*k)] != '\0') {
-		(*j)++;
+		j++;
 		(*k)++;
 	}
-	return (char*)malloc(((*j) + 1) * sizeof(char));
+	char* word = (char*)malloc((j + 1) * sizeof(char));
+	if (word == NULL) {
+		printf("Memory allocation error in searchForComma\n");
+		destroyList(head);
+		return NULL;
+	}
+	strncpy(word, line + i, abs((*k) - i));
+	word[(*k) - i] = '\0';
+	return word;
 }
 
 file_line stringToStructure(char* line, file_line* head) {
-	int i = 0;
-	int j = 0;
 	file_line element = { 0 };
 
 	// read date (first 10 symbols are always date)
@@ -52,70 +59,21 @@ file_line stringToStructure(char* line, file_line* head) {
 		destroyList(head);
 		return;
 	}
-	while (i < 10) {
-		j++;
-		i++;
-		element.date[j - 1] = line[i - 1];
-	}
-	j++;
-	element.date[j - 1] = '\0';
-	i++; //skip ','
+	strncpy(element.date, line, 10);
+	element.date[10] = '\0';
 
 	//read surname
-	j = 0;
+	int i = 11;
 	int k = i;
-	element.surname = searchForComma(line, &j, &k);
-	if (element.surname == NULL) {
-		printf("Memory allocation error in stringToStructure\n");
-		destroyList(head);
-		return;
-	}
-	j = 0;
-	while (line[i] != ',') {
-		i++;
-		j++;
-		element.surname[j - 1] = line[i - 1];
-	}
-	j++;
-	element.surname[j - 1] = '\0';
-	i++; //skip ','
+	element.surname = searchForComma(line, &k, i, head);
+	k++;
+	i = k;
+	element.name = searchForComma(line, &k, i, head);
+	k++;
+	i = k;
 
-	//read name
-	j = 0;
-	k = i;
-	element.name = searchForComma(line, &j, &k);
-	if (element.name == NULL) {
-		printf("Memory allocation error in stringToStructure\n");
-		destroyList(head);
-		return;
-	}
-	j = 0;
-	while (line[i] != ',') {
-		i++;
-		j++;
-		element.name[j - 1] = line[i - 1];
-	}
-	j++;
-	element.name[j - 1] = '\0';
-	i++; //skip ','
-
-	j = 0;
-	k = i;
 	//read hours as array of chars
-	char* buf = searchForComma(line, &j, &k);
-	if (buf == NULL) {
-		printf("Memory allocation error in stringToStructure\n");
-		destroyList(head);
-		return;
-	}
-	j = 0;
-	while (i <= k && line[i]!='\n' && line[i]!='\0') {
-		i++;
-		j++;
-		buf[j - 1] = line[i - 1];
-	}
-	j++;
-	buf[j - 1] = '\0';
+	char* buf = searchForComma(line, &k, i, head);
 	makeNumOutOfDigits(&element, buf);
 	free(buf);
 	return element; // "next" field is gonna be defined in FindElementPosition function
@@ -231,13 +189,10 @@ file_line* readFile(const char* filename) {
 		printf("Memory allocation error in readFile\n");
 		return;
 	}
-	// [^\n] reads until newline
-	// 199 is character limit
 	while ((fgets(line, sizeof(line), txt))) {
 		file_line* element = malloc(sizeof(file_line));
 		if (element == NULL) {
-			printf("Memory allocation error in stringToStructure\n");
-			free(element);
+			printf("Memory allocation error in readFile\n");
 			destroyList(head);
 			return;
 		}
@@ -261,10 +216,39 @@ file_line* readFile(const char* filename) {
 	return head;
 }
 
-int findPerson(file_line* list, char* surname, char* name) {
+
+int isUnique(full_name* arr, file_line* person, file_line* head) {
+	int j = sizeof(arr) / sizeof(arr[0]);
+	for (int i = 0; i < j; i++) {
+		if (!(strcmp(person->surname, (arr+i)->surname)) && !(strcmp(person->name, (arr+i)->name))) { // if name is already in the list, it's not unique
+			return 0;
+		}
+		else {
+			i = j + 1;
+			(arr+i-1)->surname = (char*)malloc(strlen(person->surname) * sizeof(char));
+			if ((arr + i - 1)->surname == NULL) {
+				printf("Memory allocation error in isUnique\n");
+				destroyList(head);
+				return;
+			}
+			strncpy((arr + i - 1)->surname, person->surname, strlen(person->surname));
+			(arr + i - 1)->name = (char*)malloc(strlen(person->name) * sizeof(char));
+			if ((arr + i - 1)->name == NULL) {
+				printf("Memory allocation error in isUnique\n");
+				destroyList(head);
+				return;
+			}
+			strncpy((arr + i - 1)->name, person->name, strlen(person->name));
+			return 1;
+		}
+	}
+}
+
+
+int countSum(file_line* list, char* surname, char* name) {
 	int sum_hours = 0;
 	while (list != NULL) {
-		if (!(strcmp(list->surname, surname) && strcmp(list->name, name))) { // if we found the same person in the list
+		if (!(strcmp(list->surname, surname)) && !(strcmp(list->name, name))) { // if we found the same person in the list
 			sum_hours += list->hours;
 		}
 		list = list->next;
@@ -273,19 +257,24 @@ int findPerson(file_line* list, char* surname, char* name) {
 }
 
 
-void printInfo(file_line* list, int n) {
-	file_line* head = list;
-	while (head != NULL) {
-		char* surname = head->surname;
-		char* name = head->name;
-		int sum_hours = findPerson(list, surname, name);
-		if (sum_hours > n) {
-			for (int i = 0; i < (int)strlen(head->surname); i++) {
-				printf("%c", head->surname[i]);
+void printInfo(file_line* list, file_line* head, int n) {
+	file_line* list_copy = list;
+	full_name* arr = { 0 };
+	while (list_copy != NULL) {
+		if (isUnique(arr, list_copy, head)) {
+			int sum_hours = countSum(list, list_copy->surname, list_copy->name);
+			if (sum_hours > n) {
+				for (int i = 0; i < (int)strlen(list_copy->surname); i++) {
+					printf("%c", list_copy->surname[i]);
+				}
+				printf(" ");
+				for (int i = 0; i < (int)strlen(list_copy->name); i++) {
+					printf("%c", list_copy->name[i]);
+				}
+				printf("\n");
 			}
-			printf("\n");
 		}
-		head = head->next;
+			list_copy = list_copy->next;
 	}
 }
 

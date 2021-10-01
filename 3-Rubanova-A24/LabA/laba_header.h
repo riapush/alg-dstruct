@@ -14,6 +14,11 @@ typedef struct file_line {
 	struct file_line* next;
 } file_line;
 
+typedef struct full_name {
+	char* surname;
+	char* name;
+}full_name;
+
 int charToInt(char a);
 
 void makeNumOutOfDigits(file_line* element, char* buf);
@@ -24,7 +29,7 @@ file_line stringToStructure(char* line, file_line* head);
 
 int compareStrings(char* A, char* B);
 
-int findPerson(file_line* list, char* surname, char* name);
+int countSum(file_line* list, char* surname, char* name);
 
 int oneBeforeOther(file_line* head, file_line* element);
 
@@ -38,7 +43,11 @@ void findElementPosition(int element_counter, file_line* element, file_line* oth
 
 file_line* readFile(char* filename);
 
-void printInfo(file_line* list, int n);
+int isUnique(full_name* arr, file_line* person, file_line* head);
+
+int countSum(file_line* list, char* surname, char* name);
+
+void printInfo(file_line* list, file_line* head, int n);
 
 #ifdef __cplusplus
 }

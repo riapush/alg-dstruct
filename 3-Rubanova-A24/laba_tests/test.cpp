@@ -144,25 +144,25 @@ TEST(readFile, emptyFile_expectedNULL) {
 TEST(readFile, read4LinesinFile_expectedValidVal) {
 	char* filename = "D:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\ReadFileTest.txt";
 	file_line* head = readFile(filename);
-	EXPECT_TRUE(head != NULL);
+	ASSERT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "1988-09-15");
 	EXPECT_STREQ(head->surname, "Smith");
 	EXPECT_STREQ(head->name, "Adam");
 	EXPECT_EQ(head->hours, 15);
 	head = head->next;
-	EXPECT_TRUE(head != NULL);
+	ASSERT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2021-09-13");
 	EXPECT_STREQ(head->surname, "Alexeeva");
 	EXPECT_STREQ(head->name, "Alla");
 	EXPECT_EQ(head->hours, 8);
 	head = head->next;
-	EXPECT_TRUE(head != NULL);
+	ASSERT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2020-12-09");
 	EXPECT_STREQ(head->surname, "Ivanov");
 	EXPECT_STREQ(head->name, "Ivan");
 	EXPECT_EQ(head->hours, 7);
 	head = head->next;
-	EXPECT_TRUE(head != NULL);
+	ASSERT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2015-04-13");
 	EXPECT_STREQ(head->surname, "Rubanova");
 	EXPECT_STREQ(head->name, "Valeria");
@@ -170,12 +170,22 @@ TEST(readFile, read4LinesinFile_expectedValidVal) {
 	EXPECT_TRUE(head->next == NULL);
 }
 
-TEST(findPerson, threestrings_Expected) {
+TEST(countSum, threestrings_expected22) {
 	file_line el3 = { "2021-03-12", "Ivanov", "Ivan", 3, NULL };
 	file_line el2 = { "2021-03-12", "Ivanov", "Ivan", 4, &el3 };
 	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
-	int sum = findPerson(&el1, "Ivanov", "Ivan");
+	int sum = countSum(&el1, "Ivanov", "Ivan");
 	EXPECT_TRUE(sum == 22);
+}
+
+TEST(isUnique, uniqueName_expected1) {
+	full_name arr[2] = { "Ivanov", "Sasha", "Rubanova", "Lera"};
+	file_line el3 = { "2021-03-12", "Popova", "Dasha", 3, NULL };
+	file_line el2 = { "2021-03-12", "Ivanov", "Pasha", 4, &el3 };
+	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
+	int i = isUnique(&arr, &el1, &el1);
+	EXPECT_TRUE(i, 1);
+	free(arr);
 }
 
 
