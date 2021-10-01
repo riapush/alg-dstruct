@@ -217,31 +217,29 @@ file_line* readFile(const char* filename) {
 }
 
 
-int isUnique(full_name* arr, file_line* person, file_line* head) {
-	int j = sizeof(arr) / sizeof(arr[0]);
+int isUnique(full_name* arr, file_line person, file_line* head, int j) {
 	for (int i = 0; i < j; i++) {
-		if (!(strcmp(person->surname, (arr+i)->surname)) && !(strcmp(person->name, (arr+i)->name))) { // if name is already in the list, it's not unique
+		if (!(strcmp(person.surname, (arr+i)->surname)) && !(strcmp(person.name, (arr+i)->name))) { // if name is already in the list, it's not unique
 			return 0;
 		}
-		else {
-			i = j + 1;
-			(arr+i-1)->surname = (char*)malloc(strlen(person->surname) * sizeof(char));
-			if ((arr + i - 1)->surname == NULL) {
-				printf("Memory allocation error in isUnique\n");
-				destroyList(head);
-				return;
-			}
-			strncpy((arr + i - 1)->surname, person->surname, strlen(person->surname));
-			(arr + i - 1)->name = (char*)malloc(strlen(person->name) * sizeof(char));
-			if ((arr + i - 1)->name == NULL) {
-				printf("Memory allocation error in isUnique\n");
-				destroyList(head);
-				return;
-			}
-			strncpy((arr + i - 1)->name, person->name, strlen(person->name));
-			return 1;
-		}
 	}
+	// if we reached this line, the name is unique
+	int i = j + 1;
+	(arr + i - 1)->surname = (char*)malloc(strlen(person.surname) * sizeof(char));
+	if ((arr + i - 1)->surname == NULL) {
+		printf("Memory allocation error in isUnique\n");
+		destroyList(head);
+		return;
+	}
+	strncpy((arr + i - 1)->surname, person.surname, strlen(person.surname));
+	(arr + i - 1)->name = (char*)malloc(strlen(person.name) * sizeof(char));
+	if ((arr + i - 1)->name == NULL) {
+		printf("Memory allocation error in isUnique\n");
+		destroyList(head);
+		return;
+	}
+	strncpy((arr + i - 1)->name, person.name, strlen(person.name));
+	return 1;
 }
 
 
@@ -260,8 +258,9 @@ int countSum(file_line* list, char* surname, char* name) {
 void printInfo(file_line* list, file_line* head, int n) {
 	file_line* list_copy = list;
 	full_name* arr = { 0 };
+	int j = sizeof(arr) / sizeof(arr[0]);
 	while (list_copy != NULL) {
-		if (isUnique(arr, list_copy, head)) {
+		if (isUnique(arr, (*list_copy), head, j)) {
 			int sum_hours = countSum(list, list_copy->surname, list_copy->name);
 			if (sum_hours > n) {
 				for (int i = 0; i < (int)strlen(list_copy->surname); i++) {

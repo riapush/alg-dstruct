@@ -180,12 +180,10 @@ TEST(countSum, threestrings_expected22) {
 
 TEST(isUnique, uniqueName_expected1) {
 	full_name arr[2] = { "Ivanov", "Sasha", "Rubanova", "Lera"};
-	file_line el3 = { "2021-03-12", "Popova", "Dasha", 3, NULL };
-	file_line el2 = { "2021-03-12", "Ivanov", "Pasha", 4, &el3 };
-	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
-	int i = isUnique(&arr, &el1, &el1);
-	EXPECT_TRUE(i, 1);
-	free(arr);
+	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, NULL };
+	int j = sizeof(arr) / sizeof(arr[0]);
+	int i = isUnique(arr, el1, &el1, j);
+	EXPECT_EQ(i, 1);
 }
 
 

@@ -43,7 +43,7 @@ void findElementPosition(int element_counter, file_line* element, file_line* oth
 
 file_line* readFile(char* filename);
 
-int isUnique(full_name* arr, file_line* person, file_line* head);
+int isUnique(full_name* arr, file_line person, file_line* head, int j);
 
 int countSum(file_line* list, char* surname, char* name);
 
