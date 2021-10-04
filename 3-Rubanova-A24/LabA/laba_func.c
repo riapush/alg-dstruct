@@ -225,12 +225,16 @@ int isUnique(full_name* arr, file_line person, file_line* head, int j) {
 	}
 	// if we reached this line, the name is unique
 	int i = j + 1;
-	(arr + i - 1)->surname = (char*)malloc(strlen(person.surname) * sizeof(char));
-	if ((arr + i - 1)->surname == NULL) {
+	full_name* tmp;
+	tmp = (full_name*)realloc(arr, i * sizeof(full_name));
+	//(arr + i - 1)->surname = (char*)malloc(strlen(person.surname) * sizeof(char));
+	if (tmp == NULL) {
 		printf("Memory allocation error in isUnique\n");
+		free(arr);
 		destroyList(head);
 		return;
 	}
+	arr = tmp;
 	strncpy((arr + i - 1)->surname, person.surname, strlen(person.surname));
 	(arr + i - 1)->name = (char*)malloc(strlen(person.name) * sizeof(char));
 	if ((arr + i - 1)->name == NULL) {
