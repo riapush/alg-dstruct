@@ -179,11 +179,25 @@ TEST(countSum, threestrings_expected22) {
 }
 
 TEST(isUnique, uniqueName_expected1) {
-	full_name arr[2] = { "Ivanov", "Sasha", "Rubanova", "Lera"};
+	full_name* arr = (full_name*)malloc(2 * sizeof(full_name));
+	ASSERT_TRUE(arr != NULL);
+	arr[0] = { "Petrov", "Sasha" };
+	arr[1] = { "Rubanova", "Lera" };
 	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, NULL };
 	int j = sizeof(arr) / sizeof(arr[0]);
 	int i = isUnique(arr, el1, &el1, j);
 	EXPECT_EQ(i, 1);
+}
+
+TEST(isUnique, notUniqueName_expected0) {
+	full_name* arr = (full_name*)malloc(2 * sizeof(full_name));
+	ASSERT_TRUE(arr != NULL);
+	arr[0] = { "Petrov", "Sasha" };
+	arr[1] = { "Rubanova", "Lera" };
+	file_line el1 = { "2021-03-12", "Rubanova", "Lera", 15, NULL };
+	int j = 2;
+	int i = isUnique(arr, el1, &el1, j);
+	EXPECT_EQ(i, 0);
 }
 
 

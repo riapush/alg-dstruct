@@ -219,23 +219,30 @@ file_line* readFile(const char* filename) {
 
 int isUnique(full_name* arr, file_line person, file_line* head, int j) {
 	for (int i = 0; i < j; i++) {
-		if (!(strcmp(person.surname, (arr+i)->surname)) && !(strcmp(person.name, (arr+i)->name))) { // if name is already in the list, it's not unique
+		if (!(strcmp(person.surname, arr[i].surname)) && !(strcmp(person.name, arr[i].name))) { // if name is already in the list, it's not unique
 			return 0;
 		}
 	}
 	// if we reached this line, the name is unique
 	int i = j + 1;
-	full_name* tmp;
-	tmp = (full_name*)realloc(arr, i * sizeof(full_name));
+	full_name* tmp = (full_name*)realloc(arr, i * sizeof(full_name));
 	//(arr + i - 1)->surname = (char*)malloc(strlen(person.surname) * sizeof(char));
 	if (tmp == NULL) {
 		printf("Memory allocation error in isUnique\n");
-		free(arr);
 		destroyList(head);
 		return;
 	}
 	arr = tmp;
+
+	arr[j].surname = (char*)malloc(strlen(person.surname) * sizeof(char));
+	if (arr[j].name == NULL) {
+		printf("Memory allocation error in isUnique\n");
+		destroyList(head);
+		return;
+	}
 	strncpy((arr + i - 1)->surname, person.surname, strlen(person.surname));
+
+
 	(arr + i - 1)->name = (char*)malloc(strlen(person.name) * sizeof(char));
 	if ((arr + i - 1)->name == NULL) {
 		printf("Memory allocation error in isUnique\n");
@@ -261,10 +268,11 @@ int countSum(file_line* list, char* surname, char* name) {
 
 void printInfo(file_line* list, file_line* head, int n) {
 	file_line* list_copy = list;
-	full_name* arr = { 0 };
-	int j = sizeof(arr) / sizeof(arr[0]);
+	full_name* arr = (full_name*)malloc(sizeof(full_name));
+	int j = 0;
 	while (list_copy != NULL) {
 		if (isUnique(arr, (*list_copy), head, j)) {
+			j++;
 			int sum_hours = countSum(list, list_copy->surname, list_copy->name);
 			if (sum_hours > n) {
 				for (int i = 0; i < (int)strlen(list_copy->surname); i++) {
