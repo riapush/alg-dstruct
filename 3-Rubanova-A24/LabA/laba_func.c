@@ -234,22 +234,24 @@ int isUnique(full_name* arr, file_line person, file_line* head, int j) {
 	}
 	arr = tmp;
 
-	arr[j].surname = (char*)malloc(strlen(person.surname) * sizeof(char));
-	if (arr[j].name == NULL) {
+	arr[j].surname = (char*)malloc((strlen(person.surname)+1) * sizeof(char));
+	if (arr[j].surname == NULL) {
 		printf("Memory allocation error in isUnique\n");
 		destroyList(head);
 		return;
 	}
-	strncpy((arr + i - 1)->surname, person.surname, strlen(person.surname));
+	strncpy(arr[j].surname, person.surname, strlen(person.surname));
+	arr[j].surname[strlen(person.surname)] = '\0';
 
 
-	(arr + i - 1)->name = (char*)malloc(strlen(person.name) * sizeof(char));
+	arr[j].name = (char*)malloc((strlen(person.name)+1) * sizeof(char));
 	if ((arr + i - 1)->name == NULL) {
 		printf("Memory allocation error in isUnique\n");
 		destroyList(head);
 		return;
 	}
 	strncpy((arr + i - 1)->name, person.name, strlen(person.name));
+	arr[j].name[strlen(person.name)] = '\0';
 	return 1;
 }
 
@@ -266,27 +268,46 @@ int countSum(file_line* list, char* surname, char* name) {
 }
 
 
-void printInfo(file_line* list, file_line* head, int n) {
+char* printInfo(file_line* list, file_line* head, int n) {
 	file_line* list_copy = list;
 	full_name* arr = (full_name*)malloc(sizeof(full_name));
 	int j = 0;
+	char* string = (char*)malloc(sizeof(char));
+	int k = 0;
 	while (list_copy != NULL) {
 		if (isUnique(arr, (*list_copy), head, j)) {
 			j++;
 			int sum_hours = countSum(list, list_copy->surname, list_copy->name);
 			if (sum_hours > n) {
-				for (int i = 0; i < (int)strlen(list_copy->surname); i++) {
-					printf("%c", list_copy->surname[i]);
+				char* tmp = (char*)realloc(string, (k+strlen(list_copy->surname)+1) * sizeof(char));
+				if (tmp == NULL) {
+					printf("Memory allocation error in isUnique\n");
+					destroyList(head);
+					return NULL;
 				}
-				printf(" ");
-				for (int i = 0; i < (int)strlen(list_copy->name); i++) {
-					printf("%c", list_copy->name[i]);
+				string = tmp;
+				strncpy(string+k, list_copy->surname, strlen(list_copy->surname));
+
+				k += strlen(list_copy->surname);
+				string[k] = ' ';
+				
+				tmp = (char*)realloc(string, (k + strlen(list_copy->name)+1) * sizeof(char));
+				if (tmp == NULL) {
+					printf("Memory allocation error in isUnique\n");
+					destroyList(head);
+					return NULL;
 				}
-				printf("\n");
+				string = tmp;
+				k++;
+				strncpy(string+k, list_copy->name, strlen(list_copy->name));
+				k += strlen(list_copy->name);
+				string[k] = '\n';
 			}
 		}
 			list_copy = list_copy->next;
 	}
+	string[k-1] = '\0';
+	return string;
 }
 
 

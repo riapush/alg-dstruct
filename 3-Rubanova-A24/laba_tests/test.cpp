@@ -200,6 +200,14 @@ TEST(isUnique, notUniqueName_expected0) {
 	EXPECT_EQ(i, 0);
 }
 
+TEST(printInfo, checkList_expectedValidVal) {
+	file_line el3 = { "2021-03-12", "Ivanov", "Ivan", 3, NULL };
+	file_line el2 = { "2021-03-12", "Ivanov", "Ivan", 4, &el3 };
+	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
+	char* string = printInfo(&el1, &el1, 10);
+	EXPECT_STREQ("Ivanov Ivan\n", string);
+}
+
 
 int main(int* argc, char** argv) {
 	int argn = 1;
