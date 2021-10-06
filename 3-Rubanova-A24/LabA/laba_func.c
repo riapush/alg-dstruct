@@ -308,7 +308,7 @@ char* printInfo(file_line* list, file_line* head, int n) {
 		}
 			list_copy = list_copy->next;
 	}
-	string[k-1] = '\0';
+	string[k+1] = '\0';
 	return string;
 }
 

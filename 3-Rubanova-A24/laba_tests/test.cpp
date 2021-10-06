@@ -185,7 +185,7 @@ TEST(isUnique, uniqueName_expected1) {
 	arr[1] = { "Rubanova", "Lera" };
 	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, NULL };
 	int j = sizeof(arr) / sizeof(arr[0]);
-	int i = isUnique(arr, el1, &el1, j);
+	int i = isUnique(&arr, el1, &el1, j);
 	EXPECT_EQ(i, 1);
 }
 
@@ -196,7 +196,7 @@ TEST(isUnique, notUniqueName_expected0) {
 	arr[1] = { "Rubanova", "Lera" };
 	file_line el1 = { "2021-03-12", "Rubanova", "Lera", 15, NULL };
 	int j = 2;
-	int i = isUnique(arr, el1, &el1, j);
+	int i = isUnique(&arr, el1, &el1, j);
 	EXPECT_EQ(i, 0);
 }
 
