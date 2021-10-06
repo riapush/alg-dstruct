@@ -292,6 +292,7 @@ char* printInfo(file_line* list, file_line* head, int n) {
 
 				k += strlen(list_copy->surname);
 				string[k] = ' ';
+				k++;
 				
 				tmp = (char*)realloc(string, (k + strlen(list_copy->name)+1) * sizeof(char));
 				if (tmp == NULL) {
@@ -300,15 +301,15 @@ char* printInfo(file_line* list, file_line* head, int n) {
 					return NULL;
 				}
 				string = tmp;
-				k++;
 				strncpy(string+k, list_copy->name, strlen(list_copy->name));
 				k += strlen(list_copy->name);
 				string[k] = '\n';
+				k++;
 			}
 		}
 			list_copy = list_copy->next;
 	}
-	string[k+1] = '\0';
+	string[k] = '\0';
 	return string;
 }
 
