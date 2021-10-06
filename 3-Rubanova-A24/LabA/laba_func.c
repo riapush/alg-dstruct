@@ -217,7 +217,8 @@ file_line* readFile(const char* filename) {
 }
 
 
-int isUnique(full_name* arr, file_line person, file_line* head, int j) {
+int isUnique(full_name **pArr, file_line person, file_line* head, int j) {
+	full_name* arr = *pArr;
 	for (int i = 0; i < j; i++) {
 		if (!(strcmp(person.surname, arr[i].surname)) && !(strcmp(person.name, arr[i].name))) { // if name is already in the list, it's not unique
 			return 0;
@@ -252,6 +253,7 @@ int isUnique(full_name* arr, file_line person, file_line* head, int j) {
 	}
 	strncpy((arr + i - 1)->name, person.name, strlen(person.name));
 	arr[j].name[strlen(person.name)] = '\0';
+	*pArr = arr;
 	return 1;
 }
 
@@ -275,7 +277,7 @@ char* printInfo(file_line* list, file_line* head, int n) {
 	char* string = (char*)malloc(sizeof(char));
 	int k = 0;
 	while (list_copy != NULL) {
-		if (isUnique(arr, (*list_copy), head, j)) {
+		if (isUnique(&arr, (*list_copy), head, j)) {
 			j++;
 			int sum_hours = countSum(list, list_copy->surname, list_copy->name);
 			if (sum_hours > n) {
