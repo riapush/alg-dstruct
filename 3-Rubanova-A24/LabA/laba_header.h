@@ -47,7 +47,7 @@ int isUnique(full_name **pArr, file_line person, file_line* head, int j);
 
 int countSum(file_line* list, char* surname, char* name);
 
-char* printInfo(file_line* list, file_line* head, int n);
+char* printInfo(file_line* list, int n);
 
 #ifdef __cplusplus
 }

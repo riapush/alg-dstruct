@@ -41,7 +41,6 @@ char* searchForComma(char* line, int* k, const int i, file_line* head) {
 	char* word = (char*)malloc((j + 1) * sizeof(char));
 	if (word == NULL) {
 		printf("Memory allocation error in searchForComma\n");
-		destroyList(head);
 		return NULL;
 	}
 	strncpy(word, line + i, abs((*k) - i));
@@ -49,15 +48,16 @@ char* searchForComma(char* line, int* k, const int i, file_line* head) {
 	return word;
 }
 
+
 file_line stringToStructure(char* line, file_line* head) {
 	file_line element = { 0 };
+	file_line err = { 0 };
 
 	// read date (first 10 symbols are always date)
 	element.date = (char*)malloc(11 * sizeof(char));
 	if (element.date == NULL) {
 		printf("Memory allocation error in stringToStructure\n");
-		destroyList(head);
-		return;
+		return element; // element == {0}
 	}
 	strncpy(element.date, line, 10);
 	element.date[10] = '\0';
@@ -66,14 +66,29 @@ file_line stringToStructure(char* line, file_line* head) {
 	int i = 11;
 	int k = i;
 	element.surname = searchForComma(line, &k, i, head);
+	if (element.surname == NULL) {
+		free(element.date);
+		return err;
+	}
 	k++;
 	i = k;
 	element.name = searchForComma(line, &k, i, head);
+	if (element.name == NULL) {
+		free(element.date);
+		free(element.surname);
+		return err;
+	}
 	k++;
 	i = k;
 
 	//read hours as array of chars
 	char* buf = searchForComma(line, &k, i, head);
+	if (buf == NULL) {
+		free(element.date);
+		free(element.surname);
+		free(element.name);
+		return err;
+	}
 	makeNumOutOfDigits(&element, buf);
 	free(buf);
 	return element; // "next" field is gonna be defined in FindElementPosition function
@@ -122,20 +137,24 @@ int oneBeforeOther(file_line* head, file_line* element) {
 	return 0;
 }
 
+
 void putBefore(file_line** prev, file_line** curr, file_line** next) {
 	(*prev)->next = (*curr);
 	(*curr)->next = (*next);
 }
+
 
 void putTheVeryLast(file_line** element, file_line** other_element) {
 	(*other_element)->next = (*element);
 	(*element)->next = NULL;
 }
 
+
 void goOn(file_line** previous, file_line** other_element) {
 	(*previous) = (*other_element);
 	(*other_element) = (*other_element)->next;
 }
+
 
 //function sorts elements from max working time to min working time 
 void findElementPosition(int element_counter, file_line* element, file_line* other_element) {
@@ -143,7 +162,7 @@ void findElementPosition(int element_counter, file_line* element, file_line* oth
 	int i = 1; // counter of on what element we are now
 	if (element_counter == 0) {
 		element->next = NULL;
-		return;
+		return; // this func is void type so return is used for exiting the func
 	}
 	else {
 		do {
@@ -187,16 +206,21 @@ file_line* readFile(const char* filename) {
 	file_line* head = malloc(sizeof(file_line));
 	if (head == NULL) {
 		printf("Memory allocation error in readFile\n");
-		return;
+		return NULL;
 	}
 	while ((fgets(line, sizeof(line), txt))) {
 		file_line* element = malloc(sizeof(file_line));
 		if (element == NULL) {
 			printf("Memory allocation error in readFile\n");
 			destroyList(head);
-			return;
+			return NULL;
 		}
 		*element = stringToStructure(line, head);
+		if (element->hours == 0 && element->date == NULL && element->name == NULL && element->surname == NULL && element->next == NULL) {
+			printf("Memory allocation error in readFile\n");
+			destroyList(head);
+			return NULL;
+		}
 		if (elements_counter == 0) {
 			free(head);
 			head = element;
@@ -227,29 +251,27 @@ int isUnique(full_name **pArr, file_line person, file_line* head, int j) {
 	// if we reached this line, the name is unique
 	int i = j + 1;
 	full_name* tmp = (full_name*)realloc(arr, i * sizeof(full_name));
-	//(arr + i - 1)->surname = (char*)malloc(strlen(person.surname) * sizeof(char));
 	if (tmp == NULL) {
 		printf("Memory allocation error in isUnique\n");
-		destroyList(head);
-		return;
+		return -1;
 	}
 	arr = tmp;
-
 	arr[j].surname = (char*)malloc((strlen(person.surname)+1) * sizeof(char));
 	if (arr[j].surname == NULL) {
 		printf("Memory allocation error in isUnique\n");
-		destroyList(head);
-		return;
+		return -1;
 	}
 	strncpy(arr[j].surname, person.surname, strlen(person.surname));
 	arr[j].surname[strlen(person.surname)] = '\0';
-
-
 	arr[j].name = (char*)malloc((strlen(person.name)+1) * sizeof(char));
-	if ((arr + i - 1)->name == NULL) {
+	if ((arr + j)->name == NULL) {
 		printf("Memory allocation error in isUnique\n");
-		destroyList(head);
-		return;
+		for (int k = 0; k < j; k++) {
+			free(arr[k].surname);
+			free(arr[k].name);
+		}
+		free(arr[j].surname);
+		return -1;
 	}
 	strncpy((arr + i - 1)->name, person.name, strlen(person.name));
 	arr[j].name[strlen(person.name)] = '\0';
@@ -270,21 +292,22 @@ int countSum(file_line* list, char* surname, char* name) {
 }
 
 
-char* printInfo(file_line* list, file_line* head, int n) {
+char* printInfo(file_line* list, int n) {
+	file_line* head = list;
 	file_line* list_copy = list;
 	full_name* arr = (full_name*)malloc(sizeof(full_name));
 	int j = 0;
 	char* string = (char*)malloc(sizeof(char));
 	int k = 0;
 	while (list_copy != NULL) {
-		if (isUnique(&arr, (*list_copy), head, j)) {
+		if (isUnique(&arr, (*list_copy), head, j) == 1) {
 			j++;
 			int sum_hours = countSum(list, list_copy->surname, list_copy->name);
 			if (sum_hours > n) {
-				char* tmp = (char*)realloc(string, (k+strlen(list_copy->surname)+1) * sizeof(char));
+				char* tmp = (char*)realloc(string, (k+strlen(list_copy->surname)+ strlen(list_copy->name)+2) * sizeof(char));
 				if (tmp == NULL) {
 					printf("Memory allocation error in isUnique\n");
-					destroyList(head);
+					free(string);
 					return NULL;
 				}
 				string = tmp;
@@ -293,23 +316,19 @@ char* printInfo(file_line* list, file_line* head, int n) {
 				k += strlen(list_copy->surname);
 				string[k] = ' ';
 				k++;
-				
-				tmp = (char*)realloc(string, (k + strlen(list_copy->name)+1) * sizeof(char));
-				if (tmp == NULL) {
-					printf("Memory allocation error in isUnique\n");
-					destroyList(head);
-					return NULL;
-				}
-				string = tmp;
 				strncpy(string+k, list_copy->name, strlen(list_copy->name));
 				k += strlen(list_copy->name);
 				string[k] = '\n';
 				k++;
 			}
 		}
+		else if (isUnique(&arr, (*list_copy), head, j) == -1) {
+			return NULL;
+		}
 			list_copy = list_copy->next;
 	}
 	string[k] = '\0';
+	free(arr);
 	return string;
 }
 

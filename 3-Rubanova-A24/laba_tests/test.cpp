@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "laba_header.h"
 
+
 class TestMemory : public ::testing::Test {
 protected:
 	_CrtMemState s1, s2, s3;
@@ -18,7 +19,10 @@ protected:
 	}
 };
 
+
 class StringToStructureMemory : public TestMemory {};
+class isUniqueMemory : public TestMemory {};
+class printInfoMemory : public TestMemory {};
 
 
 TEST(charToInt, char7toInt7_expectedInt7) {
@@ -27,11 +31,13 @@ TEST(charToInt, char7toInt7_expectedInt7) {
 	EXPECT_EQ(b, 7);
 }
 
+
 TEST(charToInt, charAtoIntA_expectedNegative1) {
 	char a = 'A';
 	int b = charToInt(a);
 	EXPECT_EQ(b, -1);
 }
+
 
 TEST(makeNumOutOfDigits, char1234toInt1234_expectedInt1234) {
 	char* a = "1234";
@@ -40,12 +46,14 @@ TEST(makeNumOutOfDigits, char1234toInt1234_expectedInt1234) {
 	EXPECT_TRUE(element.hours == 1234);
 }
 
+
 TEST(makeNumOutOfDigits, char1toInt1_expectedInt1) {
 	char* a = "1";
 	file_line element = { "2020-12-09", "Ivanov", "Sasha" };
 	makeNumOutOfDigits(&element, a);
 	EXPECT_TRUE(element.hours == 1);
 }
+
 
 TEST_F(StringToStructureMemory, LineToStructure_ExpectedValidVal) {
 	char* a = "2021-09-10,Ivanov,Ivan,8\n";
@@ -60,10 +68,12 @@ TEST_F(StringToStructureMemory, LineToStructure_ExpectedValidVal) {
 	free(element.name);
 }
 
+
 TEST(compareStrings, equalStrings_expected1) {
 	int a = compareStrings("Ivanova", "Ivanova");
 	EXPECT_TRUE(a == 1);
 }
+
 
 TEST(compareStrings, aBeforeB_expected2) {
 	char* A = "Abc";
@@ -72,6 +82,7 @@ TEST(compareStrings, aBeforeB_expected2) {
 	EXPECT_TRUE(a == 2);
 }
 
+
 TEST(compareStrings, bBeforeA_expected0) {
 	char* B = "Abc";
 	char* A = "Bbc";
@@ -79,11 +90,13 @@ TEST(compareStrings, bBeforeA_expected0) {
 	EXPECT_TRUE(a == 0);
 }
 
+
 TEST(oneBeforeOther, headHoursSmaller_expected1) {
 	file_line head = { "2020-12-09", "Ivanov", "Ivan", 8 };
 	file_line element = { "2020-12-09", "Ivanov", "Ivan", 12 };
 	EXPECT_EQ(oneBeforeOther(&head, &element), 1);
 }
+
 
 TEST(oneBeforeOther, headHoursBigger_expected0) {
 	file_line head = { "2020-12-09", "Ivanov", "Ivan", 4 };
@@ -91,11 +104,13 @@ TEST(oneBeforeOther, headHoursBigger_expected0) {
 	EXPECT_EQ(oneBeforeOther(&head, &element), 0);
 }
 
+
 TEST(oneBeforeOther, equalHoursHeadSurnameBefore_expected0) {
 	file_line head = { "2020-12-09", "Abakanov", "Ivan", 5 };
 	file_line element = { "2020-12-09", "Bykov", "Ivan", 5 };
 	EXPECT_EQ(oneBeforeOther(&head, &element), 0);
 }
+
 
 TEST(oneBeforeOther, EqualHoursAndSurnamesElementNameBefore_expected1) {
 	file_line head = { "2020-12-09", "Ivanova", "Boris", 4 };
@@ -103,11 +118,13 @@ TEST(oneBeforeOther, EqualHoursAndSurnamesElementNameBefore_expected1) {
 	EXPECT_EQ(oneBeforeOther(&head, &element), 1);
 }
 
+
 TEST(findElementPosition, elementCounterEquals0_expectedElementNextNULL) {
 	file_line element = { "2020-08-21", "Rubanov", "Boris", 8};
 	findElementPosition(0, &element, &element);
 	EXPECT_TRUE(element.next == NULL);
 }
+
 
 TEST(findElementPosition, elementAfterHead_expectedElementNextNULLHeadNextElement) {
 	file_line head = { "2021-03-12", "Ivanov", "Ivan", 15, NULL };
@@ -116,6 +133,7 @@ TEST(findElementPosition, elementAfterHead_expectedElementNextNULLHeadNextElemen
 	EXPECT_TRUE(element.next == NULL);
 	EXPECT_TRUE(head.next == &element);
 }
+
 
 TEST(findElementPosition, elementAfterHeadBeforeOther_expectedElementNextEl2HeadNextElement) {
 	file_line el3 = { "2021-03-12", "Ivanov", "Ivan", 3, NULL };
@@ -129,17 +147,20 @@ TEST(findElementPosition, elementAfterHeadBeforeOther_expectedElementNextEl2Head
 	EXPECT_TRUE(el3.next == NULL);
 }
 
+
 TEST(readFile, nonExistingFile_expectedNULL) {
 	char* path = "C:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\ReadFileTest.txt";
 	file_line* head = readFile(path);
 	EXPECT_TRUE(head == NULL);
 }
 
+
 TEST(readFile, emptyFile_expectedNULL) {
 	char* filename = "D:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\EmptyFileTest.txt";
 	file_line* head = readFile(filename);
 	EXPECT_TRUE(head == NULL);
 }
+
 
 TEST(readFile, read4LinesinFile_expectedValidVal) {
 	char* filename = "D:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\ReadFileTest.txt";
@@ -170,6 +191,7 @@ TEST(readFile, read4LinesinFile_expectedValidVal) {
 	EXPECT_TRUE(head->next == NULL);
 }
 
+
 TEST(countSum, threestrings_expected22) {
 	file_line el3 = { "2021-03-12", "Ivanov", "Ivan", 3, NULL };
 	file_line el2 = { "2021-03-12", "Ivanov", "Ivan", 4, &el3 };
@@ -178,7 +200,8 @@ TEST(countSum, threestrings_expected22) {
 	EXPECT_TRUE(sum == 22);
 }
 
-TEST(isUnique, uniqueName_expected1) {
+
+TEST_F(isUniqueMemory, uniqueName_expected1) {
 	full_name* arr = (full_name*)malloc(2 * sizeof(full_name));
 	ASSERT_TRUE(arr != NULL);
 	arr[0] = { "Petrov", "Sasha" };
@@ -187,9 +210,11 @@ TEST(isUnique, uniqueName_expected1) {
 	int j = sizeof(arr) / sizeof(arr[0]);
 	int i = isUnique(&arr, el1, &el1, j);
 	EXPECT_EQ(i, 1);
+	free(arr);
 }
 
-TEST(isUnique, notUniqueName_expected0) {
+
+TEST_F(isUniqueMemory, notUniqueName_expected0) {
 	full_name* arr = (full_name*)malloc(2 * sizeof(full_name));
 	ASSERT_TRUE(arr != NULL);
 	arr[0] = { "Petrov", "Sasha" };
@@ -198,21 +223,25 @@ TEST(isUnique, notUniqueName_expected0) {
 	int j = 2;
 	int i = isUnique(&arr, el1, &el1, j);
 	EXPECT_EQ(i, 0);
+	free(arr);
 }
 
-TEST(printInfo, oneName_expectedValidVal) {
+
+TEST_F(printInfoMemory, oneName_expectedValidVal) {
 	file_line el3 = { "2021-03-12", "Ivanov", "Ivan", 3, NULL };
 	file_line el2 = { "2021-03-12", "Ivanov", "Ivan", 4, &el3 };
 	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
-	char* string = printInfo(&el1, &el1, 10);
+	char* string = printInfo(&el1, 10);
 	EXPECT_STREQ("Ivanov Ivan\n", string);
+	free(string);
 }
 
-TEST(printInfo, twoNames_expectedValidVal) {
+
+TEST_F(printInfoMemory, twoNames_expectedValidVal) {
 	file_line el3 = { "2021-03-12", "Ivanov", "Ivan", 3, NULL };
 	file_line el2 = { "2021-03-12", "Ivanov", "Sasha", 4, &el3 };
 	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
-	char* string = printInfo(&el1, &el1, 1);
+	char* string = printInfo(&el1, 1);
 	EXPECT_STREQ("Ivanov Ivan\nIvanov Sasha\n", string);
 }
 
