@@ -207,9 +207,10 @@ TEST_F(isUniqueMemory, uniqueName_expected1) {
 	arr[0] = { "Petrov", "Sasha" };
 	arr[1] = { "Rubanova", "Lera" };
 	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, NULL };
-	int j = sizeof(arr) / sizeof(arr[0]);
-	int i = isUnique(&arr, el1, &el1, j);
+	int i = isUnique(&arr, el1, &el1, 2);
 	EXPECT_EQ(i, 1);
+	free(arr[2].name);
+	free(arr[2].surname);
 	free(arr);
 }
 
@@ -220,8 +221,7 @@ TEST_F(isUniqueMemory, notUniqueName_expected0) {
 	arr[0] = { "Petrov", "Sasha" };
 	arr[1] = { "Rubanova", "Lera" };
 	file_line el1 = { "2021-03-12", "Rubanova", "Lera", 15, NULL };
-	int j = 2;
-	int i = isUnique(&arr, el1, &el1, j);
+	int i = isUnique(&arr, el1, &el1, 2);
 	EXPECT_EQ(i, 0);
 	free(arr);
 }
@@ -243,6 +243,7 @@ TEST_F(printInfoMemory, twoNames_expectedValidVal) {
 	file_line el1 = { "2021-03-12", "Ivanov", "Ivan", 15, &el2 };
 	char* string = printInfo(&el1, 1);
 	EXPECT_STREQ("Ivanov Ivan\nIvanov Sasha\n", string);
+	free(string);
 }
 
 

@@ -328,6 +328,10 @@ char* printInfo(file_line* list, int n) {
 			list_copy = list_copy->next;
 	}
 	string[k] = '\0';
+	for (int t = 0; t < j; t++) {
+		free(arr[t].surname);
+		free(arr[t].name);
+	}
 	free(arr);
 	return string;
 }
