@@ -23,6 +23,7 @@ protected:
 class StringToStructureMemory : public TestMemory {};
 class isUniqueMemory : public TestMemory {};
 class printInfoMemory : public TestMemory {};
+class readFileMemory : public TestMemory {};
 
 
 TEST(charToInt, char7toInt7_expectedInt7) {
@@ -57,7 +58,7 @@ TEST(makeNumOutOfDigits, char1toInt1_expectedInt1) {
 
 TEST_F(StringToStructureMemory, LineToStructure_ExpectedValidVal) {
 	char* a = "2021-09-10,Ivanov,Ivan,8\n";
-	file_line head = { "2020-12-09", "Ivanov", "Sasha", 8, NULL};
+	file_line head = { "2020-12-09", "Ivanov", "Sasha", 8, NULL };
 	file_line element = stringToStructure(a, &head);
 	EXPECT_STREQ(element.date, "2021-09-10");
 	EXPECT_STREQ(element.surname, "Ivanov");
@@ -120,7 +121,7 @@ TEST(oneBeforeOther, EqualHoursAndSurnamesElementNameBefore_expected1) {
 
 
 TEST(findElementPosition, elementCounterEquals0_expectedElementNextNULL) {
-	file_line element = { "2020-08-21", "Rubanov", "Boris", 8};
+	file_line element = { "2020-08-21", "Rubanov", "Boris", 8 };
 	findElementPosition(0, &element, &element);
 	EXPECT_TRUE(element.next == NULL);
 }
@@ -148,21 +149,21 @@ TEST(findElementPosition, elementAfterHeadBeforeOther_expectedElementNextEl2Head
 }
 
 
-TEST(readFile, nonExistingFile_expectedNULL) {
+TEST_F(readFileMemory, nonExistingFile_expectedNULL) {
 	char* path = "C:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\ReadFileTest.txt";
 	file_line* head = readFile(path);
 	EXPECT_TRUE(head == NULL);
 }
 
 
-TEST(readFile, emptyFile_expectedNULL) {
+TEST_F(readFileMemory, emptyFile_expectedNULL) {
 	char* filename = "D:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\EmptyFileTest.txt";
 	file_line* head = readFile(filename);
 	EXPECT_TRUE(head == NULL);
 }
 
 
-TEST(readFile, read4LinesinFile_expectedValidVal) {
+TEST_F(readFileMemory, read4LinesinFile_expectedValidVal) {
 	char* filename = "D:\\Git\\GitHub\\alg-dstruct\\3-Rubanova-A24\\ReadFileTest.txt";
 	file_line* head = readFile(filename);
 	ASSERT_TRUE(head != NULL);
@@ -170,25 +171,45 @@ TEST(readFile, read4LinesinFile_expectedValidVal) {
 	EXPECT_STREQ(head->surname, "Smith");
 	EXPECT_STREQ(head->name, "Adam");
 	EXPECT_EQ(head->hours, 15);
-	head = head->next;
+	file_line* A = head->next;
+	free(head->date);
+	free(head->surname);
+	free(head->name);
+	free(head);
+	head = A;
 	ASSERT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2021-09-13");
 	EXPECT_STREQ(head->surname, "Alexeeva");
 	EXPECT_STREQ(head->name, "Alla");
 	EXPECT_EQ(head->hours, 8);
-	head = head->next;
+	A = head->next;
+	free(head->date);
+	free(head->surname);
+	free(head->name);
+	free(head);
+	head = A;
 	ASSERT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2020-12-09");
 	EXPECT_STREQ(head->surname, "Ivanov");
 	EXPECT_STREQ(head->name, "Ivan");
 	EXPECT_EQ(head->hours, 7);
-	head = head->next;
+	A = head->next;
+	free(head->date);
+	free(head->surname);
+	free(head->name);
+	free(head);
+	head = A;
 	ASSERT_TRUE(head != NULL);
 	EXPECT_STREQ(head->date, "2015-04-13");
 	EXPECT_STREQ(head->surname, "Rubanova");
 	EXPECT_STREQ(head->name, "Valeria");
 	EXPECT_EQ(head->hours, 4);
 	EXPECT_TRUE(head->next == NULL);
+	free(head->date);
+	free(head->surname);
+	free(head->name);
+	free(head);
+
 }
 
 

@@ -326,7 +326,7 @@ char* printInfo(file_line* list, int n) {
 		}
 		list_copy = list_copy->next;
 	}
-	char* tmp = (char*)realloc(string, (k+1) * sizeof(char));
+	char* tmp = (char*)realloc(string, (k + 1) * sizeof(char));
 	if (tmp == NULL) {
 		printf("Memory allocation error in isUnique\n");
 		free(string);
