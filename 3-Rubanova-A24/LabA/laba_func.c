@@ -314,6 +314,10 @@ char* printInfo(file_line* list, int n) {
 				if (tmp == NULL) {
 					printf("Memory allocation error in isUnique\n");
 					free(string);
+					for (int t = 0; t < j; t++) {
+						free(arr[t].surname);
+						free(arr[t].name);
+					}
 					free(arr);
 					return NULL;
 				}
@@ -329,6 +333,11 @@ char* printInfo(file_line* list, int n) {
 			}
 		}
 		else if (isUnique(&arr, (*list_copy), head, j) == -1) {
+			for (int t = 0; t < j; t++) {
+				free(arr[t].surname);
+				free(arr[t].name);
+			}
+			free(arr);
 			free(string);
 			return NULL;
 		}
@@ -338,6 +347,10 @@ char* printInfo(file_line* list, int n) {
 	if (tmp == NULL) {
 		printf("Memory allocation error in isUnique\n");
 		free(string);
+		for (int t = 0; t < j; t++) {
+			free(arr[t].surname);
+			free(arr[t].name);
+		}
 		free(arr);
 		return NULL;
 	}
