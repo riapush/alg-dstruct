@@ -241,6 +241,15 @@ file_line* readFile(const char* filename) {
 }
 
 
+void freeArr(full_name** pArr, int j) {
+	for (int k = 0; k < j; k++) {
+		free((*pArr)[k].surname);
+		free((*pArr)[k].name);
+	}
+	free((*pArr));
+}
+
+
 int isUnique(full_name **pArr, file_line person, file_line* head, int j) {
 	full_name* arr = *pArr;
 	for (int i = 0; i < j; i++) {
@@ -259,11 +268,7 @@ int isUnique(full_name **pArr, file_line person, file_line* head, int j) {
 	arr[j].surname = (char*)malloc((strlen(person.surname) + 1) * sizeof(char));
 	if (arr[j].surname == NULL) {
 		printf("Memory allocation error in isUnique\n");
-		for (int k = 0; k < j; k++) {
-			free(arr[k].surname);
-			free(arr[k].name);
-		}
-		free(arr);
+		freeArr(&arr, j);
 		return -1;
 	}
 	strncpy(arr[j].surname, person.surname, strlen(person.surname));
@@ -271,12 +276,8 @@ int isUnique(full_name **pArr, file_line person, file_line* head, int j) {
 	arr[j].name = (char*)malloc((strlen(person.name) + 1) * sizeof(char));
 	if ((arr + j)->name == NULL) {
 		printf("Memory allocation error in isUnique\n");
-		for (int k = 0; k < j; k++) {
-			free(arr[k].surname);
-			free(arr[k].name);
-		}
 		free(arr[j].surname);
-		free(arr);
+		freeArr(&arr, j);
 		return -1;
 	}
 	strncpy((arr + i - 1)->name, person.name, strlen(person.name));
@@ -314,11 +315,7 @@ char* printInfo(file_line* list, int n) {
 				if (tmp == NULL) {
 					printf("Memory allocation error in isUnique\n");
 					free(string);
-					for (int t = 0; t < j; t++) {
-						free(arr[t].surname);
-						free(arr[t].name);
-					}
-					free(arr);
+					freeArr(&arr, j);
 					return NULL;
 				}
 				string = tmp;
@@ -333,11 +330,7 @@ char* printInfo(file_line* list, int n) {
 			}
 		}
 		else if (isUnique(&arr, (*list_copy), head, j) == -1) {
-			for (int t = 0; t < j; t++) {
-				free(arr[t].surname);
-				free(arr[t].name);
-			}
-			free(arr);
+			freeArr(&arr, j);
 			free(string);
 			return NULL;
 		}
@@ -347,20 +340,12 @@ char* printInfo(file_line* list, int n) {
 	if (tmp == NULL) {
 		printf("Memory allocation error in isUnique\n");
 		free(string);
-		for (int t = 0; t < j; t++) {
-			free(arr[t].surname);
-			free(arr[t].name);
-		}
-		free(arr);
+		freeArr(&arr, j);
 		return NULL;
 	}
 	string = tmp;
 	string[k] = '\0';
-	for (int t = 0; t < j; t++) {
-		free(arr[t].surname);
-		free(arr[t].name);
-	}
-	free(arr);
+	freeArr(&arr, j);
 	return string;
 }
 
