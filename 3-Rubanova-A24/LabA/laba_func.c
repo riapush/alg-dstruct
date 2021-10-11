@@ -276,6 +276,7 @@ int isUnique(full_name **pArr, file_line person, file_line* head, int j) {
 			free(arr[k].name);
 		}
 		free(arr[j].surname);
+		free(arr);
 		return -1;
 	}
 	strncpy((arr + i - 1)->name, person.name, strlen(person.name));
@@ -313,6 +314,7 @@ char* printInfo(file_line* list, int n) {
 				if (tmp == NULL) {
 					printf("Memory allocation error in isUnique\n");
 					free(string);
+					free(arr);
 					return NULL;
 				}
 				string = tmp;
@@ -327,6 +329,7 @@ char* printInfo(file_line* list, int n) {
 			}
 		}
 		else if (isUnique(&arr, (*list_copy), head, j) == -1) {
+			free(string);
 			return NULL;
 		}
 		list_copy = list_copy->next;
@@ -335,6 +338,7 @@ char* printInfo(file_line* list, int n) {
 	if (tmp == NULL) {
 		printf("Memory allocation error in isUnique\n");
 		free(string);
+		free(arr);
 		return NULL;
 	}
 	string = tmp;
