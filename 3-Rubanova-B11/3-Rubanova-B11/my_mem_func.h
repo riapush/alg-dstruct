@@ -4,7 +4,7 @@ int** prevOf(int* element);
 
 int** nextOf(int* element);
 
-int* flagOf(int* element);
+int* isUsed(int* element);
 
 int* sizeCopy(int* element);
 
