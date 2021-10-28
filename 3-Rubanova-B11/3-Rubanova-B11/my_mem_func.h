@@ -1,12 +1,13 @@
 #pragma once
 
-int** prevOf(int* element);
+int* sizeCopy(int* element);
+
 
 int** nextOf(int* element);
 
-int* isUsed(int* element);
+int** prevOf(int* element);
 
-int* sizeCopy(int* element);
+int* isFree(int* element);
 
 typedef struct init {
 	int* ptr;
