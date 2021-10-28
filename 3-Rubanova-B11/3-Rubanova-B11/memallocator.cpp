@@ -1,6 +1,4 @@
 #include "memallocator.h"
-//#include "my_mem_func.h"
-#include <inttypes.h>
 #include <stdlib.h>
 #include <stdio.h>
 #define OK 1

@@ -122,8 +122,8 @@ TEST(memalloc_Test, memalloc_memallocInitTextBlockAndCharBlock_expectMemoryAlloc
 	}
 	char* a_text = (char*)memalloc(TEST_MEMORY_TEXT_BLOCK_SIZE);
 	char* b_char = (char*)memalloc(sizeof(char));
-	int* desc_a = (int*)((char*)a_text - 2*sizeof(int) - 2*sizeof(int*));
-	int* desc_b = (int*)((char*)b_char - 2*sizeof(int) - 2*sizeof(int*));
+	int* desc_a = (int*)((char*)a_text - 2 * sizeof(int) - 2 * sizeof(int*));
+	int* desc_b = (int*)((char*)b_char - 2 * sizeof(int) - 2 * sizeof(int*));
 	EXPECT_EQ(bytes_init, 1);
 	EXPECT_EQ(*desc_a, TEST_MEMORY_TEXT_BLOCK_SIZE + memgetblocksize());
 	EXPECT_EQ(*sizeCopy(desc_a), TEST_MEMORY_TEXT_BLOCK_SIZE + memgetblocksize());
@@ -152,8 +152,8 @@ TEST(memalloc_Test, memalloc_memallocInitTextBlockAndCharBlock_expectNoBlocksCor
 	}
 	char* a_text = (char*)memalloc(TEST_MEMORY_TEXT_BLOCK_SIZE);
 	char* b_char = (char*)memalloc(sizeof(char));
-	int* desc_a = (int*)((char*)a_text - 2*sizeof(int) - 2*sizeof(void*));
-	int* desc_b = (int*)((char*)b_char - 2*sizeof(int) - 2*sizeof(void*));
+	int* desc_a = (int*)((char*)a_text - 2 * sizeof(int) - 2 * sizeof(void*));
+	int* desc_b = (int*)((char*)b_char - 2 * sizeof(int) - 2 * sizeof(void*));
 	strcpy(a_text, sometext);
 	*b_char = b;
 	EXPECT_EQ(bytes_init, 1);
@@ -190,7 +190,7 @@ TEST(memfree_Test, memfree_memfreeFreeOneBlock_expectSizeIsPositive) {
 	*sizeCopy(all_init_memory_block_desc) = *sizeCopy(all_init_memory_block_desc);
 	list.ptr = NULL;
 	// freeing this block
-	void* user_ptr_to_block = (void*)((char*)all_init_memory_block_desc + 2*sizeof(int) + 2*sizeof(int*));
+	void* user_ptr_to_block = (void*)((char*)all_init_memory_block_desc + 2 * sizeof(int) + 2 * sizeof(int*));
 	memfree(user_ptr_to_block);
 	EXPECT_EQ(*isFree(all_init_memory_block_desc), 1);
 	EXPECT_EQ(list.ptr, ptr);
@@ -222,7 +222,7 @@ TEST(memfree_Test, memfree_memfreeFreeBlockWhereRightBlockIsFree_expectBlocksMer
 	*isFree(free_char_block_desc) = 1;
 	*sizeCopy(free_char_block_desc) = *free_char_block_desc;
 	// now freeing and expect memory state similar to state after meminit
-	int* user_ptr_to_allocated_block = (int*)((char*)allocated_char_block_desc + 2*sizeof(int) + 2*sizeof(int*));
+	int* user_ptr_to_allocated_block = (int*)((char*)allocated_char_block_desc + 2 * sizeof(int) + 2 * sizeof(int*));
 	memfree(user_ptr_to_allocated_block);
 	EXPECT_EQ(*allocated_char_block_desc, list.size);
 	EXPECT_EQ(*sizeCopy(allocated_char_block_desc), list.size);
@@ -255,7 +255,7 @@ TEST(memfree_Test, memfree_memfreeFreeBlockWhereLeftBlockIsFree_expectBlocksMerg
 	*isFree(allocated_char_block_desc) = 0;
 	*sizeCopy(allocated_char_block_desc) = *allocated_char_block_desc;
 	// now freeing and expect memory state similar with state after meminit
-	void* user_ptr_to_allocated_block = (void*)((char*)allocated_char_block_desc + 2*sizeof(int) + 2*sizeof(int*));
+	void* user_ptr_to_allocated_block = (void*)((char*)allocated_char_block_desc + 2 * sizeof(int) + 2 * sizeof(int*));
 	memfree(user_ptr_to_allocated_block);
 	EXPECT_EQ(*free_char_block_desc, list.size);
 	EXPECT_EQ(*sizeCopy(free_char_block_desc), list.size);
@@ -296,7 +296,7 @@ TEST(memfree_Test, memfree_memfreeFreeBlockBetweenTwoFreeBlocks_expectBlocksMerg
 	*sizeCopy(third_free_char_block_desc) = *third_free_char_block_desc;
 	*nextOf(first_free_char_block_desc) = third_free_char_block_desc;
 	// now freeing and expect memory state similar with state after meminit
-	void* user_ptr_to_allocated_block = (void*)((char*)allocated_char_block_desc + 2*sizeof(int) + 2*sizeof(int*));
+	void* user_ptr_to_allocated_block = (void*)((char*)allocated_char_block_desc + 2 * sizeof(int) + 2 * sizeof(int*));
 	memfree(user_ptr_to_allocated_block);
 	EXPECT_EQ(*first_free_char_block_desc, list.size);
 	EXPECT_EQ(*sizeCopy(first_free_char_block_desc), list.size);
