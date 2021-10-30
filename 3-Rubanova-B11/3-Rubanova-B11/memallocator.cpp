@@ -12,7 +12,7 @@ typedef struct init {
 	int* ptr;
 	int size;
 
-}init;
+} init;
 
 
 init list;
@@ -40,30 +40,30 @@ int* sizeCopy(int* element) {
 
 
 int meminit(void *pMemory, int size) {
-	// descriptor consist of size = size, next = NULL, prev = NULL, is used = FALSE, sizecopy in the end
+	// descriptor consist of size = size, next = NULL, prev = NULL, isFree = FALSE, sizecopy in the end
 	if (size <= memgetminimumsize()) // 0-size block musn't be allocated
 		return 0;
 	pMemory1 = pMemory;
 	list.size = size;
 	list.ptr = (int*)pMemory;
 	*(list.ptr) = size;
-	*nextOf(list.ptr) = (int*)NULL; // next 
-	*prevOf(list.ptr) = (int*)NULL; // prev
-	*isFree(list.ptr) = TRUE; // is used
-	*sizeCopy(list.ptr) = size; // copy size in the end of block
+	*nextOf(list.ptr) = NULL;
+	*prevOf(list.ptr) = NULL;
+	*isFree(list.ptr) = TRUE;
+	*sizeCopy(list.ptr) = size;
 	return OK;
 }
 
 
 void* memalloc(int size) {
-	if ((int)size < 1 || (int)size > list.size - memgetblocksize())
+	if (size < 1 || size > list.size - memgetblocksize())
 		return NULL;
 	int* head = list.ptr;
-	if (head == (int*)NULL) {
+	if (head == NULL) {
 		return NULL;
 	}
-	while (*head < (int)(size + DESC_SIZE)) { // while suitable block not found
-		if (*nextOf(head) == (int*)NULL) { // if next == NULL, there's no free blocks left
+	while (*head < size + DESC_SIZE) { // while suitable block not found
+		if (*nextOf(head) == NULL) { // if next == NULL, there's no free blocks left
 			return NULL;
 		}
 		head = *nextOf(head); // move to next block
@@ -78,15 +78,15 @@ void* memalloc(int size) {
 		*nextOf(next) = *nextOf(head); // next.next equals head.next
 		*prevOf(next) = *prevOf(head); // next.prev equals head.prev
 		*isFree(next) = TRUE; // is used
-		if (*prevOf(head) != (int*)NULL) { // if head had prev element
-			int* prev = *prevOf(head); //we need to change prev.next from head to next
+		if (*prevOf(head) != NULL) { // if head had prev element
+			int* prev = *prevOf(head); // we need to change prev.next from head to next
 			*nextOf(prev) = next;
 		}
 		else {
 			list.ptr = next;
 		}
-		if (*nextOf(head) != (int*)NULL) {
-			int* next1 = *nextOf(head); //we need to change next.next from head to prev
+		if (*nextOf(head) != NULL) {
+			int* next1 = *nextOf(head); // we need to change next.next from head to prev
 			*prevOf(next1) = next;
 		}
 		*head = size + DESC_SIZE;
@@ -98,24 +98,24 @@ void* memalloc(int size) {
 		// just delete head out of list
 		int* next = *nextOf(head);
 		int* prev = *prevOf(head);
-		if (next == (int*)NULL && prev == (int*)NULL) {
+		if (next == NULL && prev == NULL) {
 			list.ptr = NULL; // list of free blocks is empty 
 		}
-		else if (prev == (int*)NULL) {
-			*prevOf(next) = (int*)NULL; // then next1 becomes first
+		else if (prev == NULL) {
+			*prevOf(next) = NULL; // then next1 becomes first
 			list.ptr = next;
 		}
-		else if (next == (int*)NULL) {
-			*nextOf(prev) = (int*)NULL; // if next == null, then prev becomes last
+		else if (next == NULL) {
+			*nextOf(prev) = NULL; // if next == null, then prev becomes last
 		}
 		else {
 			*nextOf(prev) = next;
 			*prevOf(next) = prev;
 		}
 	}
-	*isFree(head) = FALSE; // is used
-	*nextOf(head) = (int*)NULL; // head is occupied so it's out of list
-	*prevOf(head) = (int*)NULL;
+	*isFree(head) = FALSE;
+	*nextOf(head) = NULL; // head is occupied so it's out of list
+	*prevOf(head) = NULL;
 	return (void*)((char*)head + DESC_SIZE - sizeof(int)); // first 4 cells are occupied w/ descriptor
 }
 
@@ -128,12 +128,12 @@ void memfree(void *p) {
 	int merged_w_right = FALSE;
 	int* head = (int*)((char*)p - DESC_SIZE + sizeof(int)); // go to descriptor
 	*isFree(head) = TRUE;
-	int* next_in_memory = (int*)NULL;
-	if ((int*)((char*)head + *head) <= (int*)((char*)pMemory1 + list.size)) { ///???????
+	int* next_in_memory = NULL;
+	if ((int*)((char*)head + *head) < (int*)((char*)pMemory1 + list.size)) {
 		next_in_memory = (int*)((char*)head + *head);
 	}
-	int* prev_in_memory = (int*)NULL;
-	if ((int*)((char*)head - sizeof(int)) >= (int*)pMemory1) {
+	int* prev_in_memory = NULL;
+	if ((int*)((char*)head - sizeof(int)) > (int*)pMemory1) {
 		int size = *(int*)((char*)head - sizeof(int));
 		prev_in_memory = (int*)((char*)head - size);
 	}
@@ -152,7 +152,7 @@ void memfree(void *p) {
 		if (!merged_w_left) {
 			*nextOf(head) = list.ptr;
 			*prevOf(list.ptr) = head;
-			*prevOf(head) = (int*)NULL;
+			*prevOf(head) = NULL;
 			list.ptr = head;
 		}
 
