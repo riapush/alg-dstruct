@@ -172,8 +172,7 @@ void stress_test() {
 
 
 int main(void) {
-	stress_test();
-	/*fscanf(stdin, "%d", &n);
+	fscanf(stdin, "%d", &n);
 
 	tree = (int**)malloc(sizeof(int*) * n);
 	if (tree == NULL) {
@@ -215,7 +214,4 @@ int main(void) {
 	}
 	free(tree);
 	free(visited);
-	*/
-
-
 }
