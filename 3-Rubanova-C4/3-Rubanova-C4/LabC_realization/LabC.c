@@ -44,7 +44,8 @@ int main(void) {
 		tree[y][x] = 1;
 	}
 
-	breadthFirstSearch(0);
+	if (breadthFirstSearch(0) == -1)
+		printf("Error occured during breadthFirstsearch\n");
 	for (int i = 0; i < n; i++)
 		free(tree[i]);
 	free(tree);
