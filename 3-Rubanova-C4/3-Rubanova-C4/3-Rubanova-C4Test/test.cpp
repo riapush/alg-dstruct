@@ -16,8 +16,12 @@ TEST(bfsStressTest, stressTest) {
 			free(tree);
 		}
 		ASSERT_TRUE(tree != NULL);
-		for (int j = 0; j < num_v; j++)
+	}
+	for (int i = 0; i < num_v; i++) {
+		for (int j = 0; j < num_v; j++) {
 			tree[i][j] = rand() % 2;
+			tree[j][i] = tree[i][j];
+		}
 	}
 
 	visited = (int*)malloc(sizeof(int) * num_v);

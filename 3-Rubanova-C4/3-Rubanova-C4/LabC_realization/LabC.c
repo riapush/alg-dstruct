@@ -3,6 +3,7 @@
 #include "LabC.h"
 #pragma warning(disable : 4996)
 
+
 int main(void) {
 	fscanf(stdin, "%d", &n);
 
@@ -17,6 +18,7 @@ int main(void) {
 		if (tree[i] == NULL) {
 			for (int j = i - 1; j >= 0; j--)
 				free(tree[j]);
+			free(tree);
 			printf("Memory allocation error for tree[%i] in main\n", i);
 			return 1;
 		}

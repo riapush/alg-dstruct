@@ -1,4 +1,10 @@
 #pragma once
+#ifndef _MY_H 
+#define _MY_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct q_list {
 	int vertex;
@@ -26,3 +32,8 @@ void freeQueue(queue* q);
 
 int breadthFirstSearch(int vertex);
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -98,13 +98,16 @@ int breadthFirstSearch(int vertex) {
 				if (visited[y] == 1)
 					continue;
 				else {
-					if (insert(q, y) == ERROR)
+					if (insert(q, y) == ERROR) {
+						freeQueue(q);
 						return ERROR;
+					}
 					visited[y] = 1;
 				}
 			}
 		}
 		visited[current] = 1;
 	}
+	free(q);
 	return OK;
 }
