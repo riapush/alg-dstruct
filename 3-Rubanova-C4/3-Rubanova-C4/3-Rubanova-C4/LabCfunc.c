@@ -88,8 +88,10 @@ int breadthFirstSearch(int vertex) {
 		return ERROR;
 	}
 	init(q);
-	if (insert(q, 0) == ERROR)
+	if (insert(q, 0) == ERROR) {
+		free(q);
 		return ERROR;
+	}
 	while (q->head != NULL) {
 		int current = pop(q);
 		printf("%i ", current);
@@ -108,6 +110,6 @@ int breadthFirstSearch(int vertex) {
 		}
 		visited[current] = 1;
 	}
-	free(q);
+	freeQueue(q);
 	return OK;
 }

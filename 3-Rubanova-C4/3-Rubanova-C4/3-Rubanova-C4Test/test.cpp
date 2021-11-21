@@ -5,7 +5,9 @@
 TEST(bfsStressTest, stressTest) {
 	unsigned long start = clock();
 	int num_v = 15000;
-	free(tree);
+	if (tree != NULL) {
+		free(tree);
+	}
 	tree = (int**)malloc(sizeof(int*) * num_v);
 	ASSERT_TRUE(tree != NULL);
 	for (int i = 0; i < num_v; i++) {
