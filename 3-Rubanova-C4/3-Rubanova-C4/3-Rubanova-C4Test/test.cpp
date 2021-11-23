@@ -7,6 +7,7 @@ TEST(bfsStressTest, stressTest) {
 	int num_v = 15000;
 	if (tree != NULL) {
 		free(tree);
+		tree = NULL;
 	}
 	tree = (int**)malloc(sizeof(int*) * num_v);
 	ASSERT_TRUE(tree != NULL);
@@ -16,6 +17,7 @@ TEST(bfsStressTest, stressTest) {
 			for (int j = i - 1; j >= 0; j--)
 				free(tree[j]);
 			free(tree);
+			tree = NULL;
 		}
 		ASSERT_TRUE(tree != NULL);
 	}
