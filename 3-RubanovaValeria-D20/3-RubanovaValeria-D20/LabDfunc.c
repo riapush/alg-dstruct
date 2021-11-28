@@ -1,7 +1,7 @@
 #include "LabD.h"
 #pragma warning (disable:4996)
 
-int compare(int * x, int* y) {
+int compare(int* x, int* y) {
 	return *x - *y;
 }
 
