@@ -152,17 +152,17 @@ int* subsetSum(int* set, long int sum, int n, int* subset_size) {
 }
 
 int labSolution(const char* input, const char* output) {
-	int* A = NULL;
-	long int B = -1;
-	int N = -1;
+	int* a = NULL;
+	long int b = -1;
+	int n = -1;
 	int subset_size = -1;
-	A = readFile(input, &B, &N);
-	if (A == NULL) {
+	a = readFile(input, &b, &n);
+	if (a == NULL) {
 		printf("Memory allocation error in readFile\n");
 		return -1;
 	}
-	qsort(A, N, sizeof(int), (int(*) (const void *, const void *))compare);
-	int* solution = subsetSum(A, B, N, &subset_size);
+	qsort(a, n, sizeof(int), (int(*) (const void *, const void *))compare);
+	int* solution = subsetSum(a, b, n, &subset_size);
 	if (solution == NULL) {
 		return -1;
 	}

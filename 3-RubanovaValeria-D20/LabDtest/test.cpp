@@ -129,7 +129,7 @@ TEST(stressTest, labSolution) {
 TEST(functionalTest, sum7_set123_expected0) {
 	char* filename = "test1_input.txt";
 	char* output = "test1_output.txt";
-	int toCheck = labSolution(filename, output);
+	int to_check = labSolution(filename, output);
 	FILE* fp = fopen(output, "r");
 	if (fp == NULL) {
 		printf("error in file");
@@ -144,7 +144,7 @@ TEST(functionalTest, sum7_set123_expected0) {
 TEST(functionalTest, sum4_set123_expected13) {
 	char* filename = "test2_input.txt";
 	char* output = "test2_output.txt";
-	int toCheck = labSolution(filename, output);
+	int to_check = labSolution(filename, output);
 	FILE* fp = fopen(output, "r");
 	if (fp == NULL) {
 		printf("error in file");
@@ -159,7 +159,7 @@ TEST(functionalTest, sum4_set123_expected13) {
 TEST(functionalTest, sum9_expected234) {
 	char* filename = "test3_input.txt";
 	char* output = "test3_output.txt";
-	int toCheck = labSolution(filename, output);
+	int to_check = labSolution(filename, output);
 	FILE* fp = fopen(output, "r");
 	if (fp == NULL) {
 		printf("error in file");
@@ -174,7 +174,7 @@ TEST(functionalTest, sum9_expected234) {
 TEST(functionalTest, sum10_expected235) {
 	char* filename = "test4_input.txt";
 	char* output = "test4_output.txt";
-	int toCheck = labSolution(filename, output);
+	int to_check = labSolution(filename, output);
 	FILE* fp = fopen(output, "r");
 	if (fp == NULL) {
 		printf("error in file");
@@ -189,7 +189,7 @@ TEST(functionalTest, sum10_expected235) {
 TEST(functionalTest, sum20_expected12458) {
 	char* filename = "test5_input.txt";
 	char* output = "test5_output.txt";
-	int toCheck = labSolution(filename, output);
+	int to_check = labSolution(filename, output);
 	FILE* fp = fopen(output, "r");
 	if (fp == NULL) {
 		printf("error in file");
@@ -204,7 +204,7 @@ TEST(functionalTest, sum20_expected12458) {
 TEST(functionalTest, sum7_expected133) {
 	char* filename = "test6_input.txt";
 	char* output = "test6_output.txt";
-	int toCheck = labSolution(filename, output);
+	int to_check = labSolution(filename, output);
 	FILE* fp = fopen(output, "r");
 	if (fp == NULL) {
 		printf("error in file");
@@ -219,7 +219,7 @@ TEST(functionalTest, sum7_expected133) {
 TEST(functionalTest, sum20_expected223445) {
 	char* filename = "test7_input.txt";
 	char* output = "test7_output.txt";
-	int toCheck = labSolution(filename, output);
+	int to_check = labSolution(filename, output);
 	FILE* fp = fopen(output, "r");
 	if (fp == NULL) {
 		printf("error in file");
