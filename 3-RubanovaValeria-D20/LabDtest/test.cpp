@@ -93,7 +93,7 @@ TEST(traceSubset, sum4_set123_expected31) {
 	freeMatrix(A, 3);
 }
 
-const int count = 100;
+const int count = 1000000;
 /*
 Device name	LAPTOP-F07HB6MN
 CPU	AMD Ryzen 5 3500U with Radeon Vega Mobile Gfx     2.10 GHz
