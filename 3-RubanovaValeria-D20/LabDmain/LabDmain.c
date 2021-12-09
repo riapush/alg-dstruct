@@ -4,14 +4,11 @@ int main()
 {
 	char* input = "input.txt";
 	char* output = "output.txt";
-	int* A = NULL;
-	int B = -1;
-	int N = -1;
-	int subset_size = -1;
-	A = readFile(input, &B, &N);
-	qsort(A, N, sizeof(int), (int(*) (const void *, const void *))compare);
-	int* solution = subsetSum(A, B, N, &subset_size);
-	writeFile(output, solution, subset_size);
-	free(solution);
+	if (labSolution(input, output) == -1) {
+		printf("Oops it seems that error ocurred. Sorry!\n");
+	}
+	else {
+		printf("Check file, solution is there already!\n");
+	}
 	return 0;
 }

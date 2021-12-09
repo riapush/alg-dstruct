@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _MY_H 
 #define _MY_H
 
@@ -11,22 +10,25 @@ extern "C" {
 
 int compare(int * x, int* y);
 
-int* readFile(const char* filename, int* B, int* N);
+int* readFile(const char* filename, long int* b, int* n);
 
-void writeFile(const char* filename, int* solution, int size);
+int writeFile(const char* filename, int* solution, int size);
 
-bool** createMatrix(int c, int r);
+bool** createMatrix(int c, long int r);
 
-void freeMatrix(bool** A, int c);
+void freeMatrix(bool** matrix, int c);
 
-void fillMatrix(bool** A, int* set, int c, int r);
+void fillMatrix(bool** matrix, int* set, int c, long int r);
 
-int* traceSubset(bool** A, int* set, int c, int r, int* subset_size);
+int* traceSubset(bool** matrix, int* set, int c, long int r, int* subset_size);
 
-int* subsetSum(int* set, int sum, int n, int* subset_size);
+int* subsetSum(int* set, long int sum, int n, int* subset_size);
+
+int labSolution(const char* input, const char* output);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif
+
