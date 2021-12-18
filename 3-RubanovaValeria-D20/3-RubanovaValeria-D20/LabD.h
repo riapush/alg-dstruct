@@ -8,7 +8,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdlib.h>
 
-int compare(int * x, int* y);
+int compare(int* x, int* y);
 
 int* readFile(const char* filename, long int* b, int* n);
 

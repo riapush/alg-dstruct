@@ -130,6 +130,9 @@ TEST(functionalTest, sum7_set123_expected0) {
 	char* filename = "test1_input.txt";
 	char* output = "test1_output.txt";
 	int to_check = labSolution(filename, output);
+	if (to_check == -1) {
+		ASSERT_EQ(to_check, 0);
+	}
 	FILE* fp = fopen(output, "r");
 	if (fp == NULL) {
 		printf("error in file");

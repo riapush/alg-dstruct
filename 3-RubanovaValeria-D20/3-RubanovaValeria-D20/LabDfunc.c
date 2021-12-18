@@ -164,13 +164,17 @@ int labSolution(const char* input, const char* output) {
 	qsort(a, n, sizeof(int), (int(*) (const void *, const void *))compare);
 	int* solution = subsetSum(a, b, n, &subset_size);
 	if (solution == NULL) {
+		free(a);
 		return -1;
 	}
 	int check = writeFile(output, solution, subset_size);
 	if (check == -1) {
+		free(a);
 		free(solution);
 		return -1;
 	}
+	free(a);
 	free(solution);
+	return 0;
 }
 
