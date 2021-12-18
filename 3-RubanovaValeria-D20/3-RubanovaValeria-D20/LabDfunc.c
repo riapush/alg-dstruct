@@ -95,6 +95,7 @@ int* traceSubset(bool** matrix, int* set, int c, long int r, int* subset_size) {
 			(*subset_size)++;
 			int* tmp = (int*)realloc(solution, *(subset_size) * sizeof(int));
 			if (tmp == NULL) {
+				free(solution);
 				printf("Memory allocation error in traceSubset\n");
 				return NULL;
 			}
@@ -109,6 +110,7 @@ int* traceSubset(bool** matrix, int* set, int c, long int r, int* subset_size) {
 			(*subset_size)++;
 			int* tmp = (int*)realloc(solution, *(subset_size) * sizeof(int));
 			if (tmp == NULL) {
+				free(solution);
 				printf("Memory allocation error in traceSubset\n");
 				return NULL;
 			}
