@@ -6,7 +6,7 @@ int compare(int* x, int* y) {
 	return *x - *y;
 }
 
-int* readFile(const char* filename, long int* b, int* n) {
+int* readFile(const char* filename, unsigned int* b, int* n) {
 	FILE* file = fopen(filename, "r");
 	if (file == NULL) {
 		printf("Unable to open file\n");
@@ -35,7 +35,7 @@ int writeFile(const char* filename, int* solution, int size) {
 	return 0;
 }
 
-bool** createMatrix(int c, long int r) { // c is length of column, r is length of row
+bool** createMatrix(int c, unsigned int r) { // c is length of column, r is length of row
 	bool** A = (bool**)malloc(c * sizeof(bool*));
 	if (A == NULL) {
 		printf("Memory allocation error in createMatrix\n");
@@ -61,9 +61,9 @@ void freeMatrix(bool** matrix, int c) {
 	free(matrix);
 }
 
-void fillMatrix(bool** matrix, int* set, int c, long int r) {
-	for (long int i = 0; i < c; i++) {
-		for (long int j = 0; j < r; j++) {
+void fillMatrix(bool** matrix, int* set, int c, unsigned int r) {
+	for (unsigned int i = 0; i < c; i++) {
+		for (unsigned int j = 0; j < r; j++) {
 			if (i == 0) {
 				if (j == set[i] || j == 0) {
 					matrix[i][j] = true;
@@ -85,11 +85,11 @@ void fillMatrix(bool** matrix, int* set, int c, long int r) {
 
 }
 
-int* traceSubset(bool** matrix, int* set, int c, long int r, int* subset_size) {
+int* traceSubset(bool** matrix, int* set, int c, unsigned int r, int* subset_size) {
 	(*subset_size) = 0;
 	int* solution = NULL;
 	int i = c - 1;
-	long int j = r - 1;
+	unsigned int j = r - 1;
 	while (i >= 0) {
 		if (i == 0 && matrix[i][j] == true) {
 			(*subset_size)++;
@@ -123,7 +123,7 @@ int* traceSubset(bool** matrix, int* set, int c, long int r, int* subset_size) {
 	return solution;
 }
 
-int* subsetSum(int* set, long int sum, int n, int* subset_size) {
+int* subsetSum(int* set, unsigned int sum, int n, int* subset_size) {
 	int* solution = (int*)malloc(sizeof(int));
 	if (solution == NULL) {
 		printf("Memory allocation error in subsetSum\n");
@@ -155,7 +155,7 @@ int* subsetSum(int* set, long int sum, int n, int* subset_size) {
 
 int labSolution(const char* input, const char* output) {
 	int* a = NULL;
-	long int b = -1;
+	unsigned int b = -1;
 	int n = -1;
 	int subset_size = -1;
 	a = readFile(input, &b, &n);
