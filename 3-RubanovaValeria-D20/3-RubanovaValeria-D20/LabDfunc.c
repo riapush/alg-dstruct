@@ -41,7 +41,7 @@ bool** createMatrix(int c, unsigned int r) { // c is length of column, r is leng
 		printf("Memory allocation error in createMatrix\n");
 		return NULL;
 	}
-	for (unsigned int i = 0; i < c; i++) {
+	for (int i = 0; i < c; i++) {
 		A[i] = (bool*)malloc(r * sizeof(bool));
 		if (A[i] == NULL) {
 			for (unsigned int j = i - 1; j >= 0; j--)
@@ -73,11 +73,21 @@ void fillMatrix(bool** matrix, int* set, int c, unsigned int r) {
 				}
 			}
 			else {
-				if ((matrix[i - 1][j] == true) || (matrix[i - 1][j - set[i]] == true)) {
+				if ((matrix[i - 1][j] == true)) {
 					matrix[i][j] = true;
 				}
 				else {
-					matrix[i][j] = false;
+					if (j - set[i] >= 0) {
+						if (matrix[i - 1][j - set[i]] == true) {
+							matrix[i][j] = true;
+						}
+						else {
+							matrix[i][j] = false;
+						}
+					}
+					else {
+						matrix[i][j] = false;
+					}
 				}
 			}
 		}
