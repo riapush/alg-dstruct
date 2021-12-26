@@ -41,10 +41,10 @@ bool** createMatrix(int c, unsigned int r) { // c is length of column, r is leng
 		printf("Memory allocation error in createMatrix\n");
 		return NULL;
 	}
-	for (int i = 0; i < c; i++) {
+	for (unsigned int i = 0; i < c; i++) {
 		A[i] = (bool*)malloc(r * sizeof(bool));
 		if (A[i] == NULL) {
-			for (int j = i - 1; j >= 0; j--)
+			for (unsigned int j = i - 1; j >= 0; j--)
 				free(A[j]);
 			free(A);
 			printf("Memory allocation error for A[%i] in createMatrix\n", i);
