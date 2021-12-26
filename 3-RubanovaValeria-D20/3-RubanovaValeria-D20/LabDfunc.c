@@ -6,13 +6,13 @@ int compare(int* x, int* y) {
 	return *x - *y;
 }
 
-int* readFile(const char* filename, unsigned int* b, int* n) {
+int* readFile(const char* filename, long long int* b, int* n) {
 	FILE* file = fopen(filename, "r");
 	if (file == NULL) {
 		printf("Unable to open file\n");
 		return NULL;
 	}
-	fscanf(file, "%li\n", b);
+	fscanf(file, "%lli\n", b);
 	fscanf(file, "%i\n", n);
 	int* set = (int*)malloc((*n) * sizeof(int));
 	for (int i = 0; i < *(n); i++) {
@@ -35,7 +35,7 @@ int writeFile(const char* filename, int* solution, int size) {
 	return 0;
 }
 
-bool** createMatrix(int c, unsigned int r) { // c is length of column, r is length of row
+bool** createMatrix(int c, long long int r) { // c is length of column, r is length of row
 	bool** A = (bool**)malloc(c * sizeof(bool*));
 	if (A == NULL) {
 		printf("Memory allocation error in createMatrix\n");
@@ -44,7 +44,7 @@ bool** createMatrix(int c, unsigned int r) { // c is length of column, r is leng
 	for (int i = 0; i < c; i++) {
 		A[i] = (bool*)malloc(r * sizeof(bool));
 		if (A[i] == NULL) {
-			for (unsigned int j = i - 1; j >= 0; j--)
+			for (long long int j = i - 1; j >= 0; j--)
 				free(A[j]);
 			free(A);
 			printf("Memory allocation error for A[%i] in createMatrix\n", i);
@@ -61,9 +61,9 @@ void freeMatrix(bool** matrix, int c) {
 	free(matrix);
 }
 
-void fillMatrix(bool** matrix, int* set, int c, unsigned int r) {
-	for (unsigned int i = 0; i < c; i++) {
-		for (unsigned int j = 0; j < r; j++) {
+void fillMatrix(bool** matrix, int* set, int c, long long int r) {
+	for (int i = 0; i < c; i++) {
+		for (long long int j = 0; j < r; j++) {
 			if (i == 0) {
 				if (j == set[i] || j == 0) {
 					matrix[i][j] = true;
@@ -73,21 +73,11 @@ void fillMatrix(bool** matrix, int* set, int c, unsigned int r) {
 				}
 			}
 			else {
-				if ((matrix[i - 1][j] == true)) {
+				if ((matrix[i - 1][j] == true) || matrix[i - 1][j - (long long int)set[i]] == true) {
 					matrix[i][j] = true;
 				}
 				else {
-					if (j - set[i] >= 0) {
-						if (matrix[i - 1][j - set[i]] == true) {
-							matrix[i][j] = true;
-						}
-						else {
-							matrix[i][j] = false;
-						}
-					}
-					else {
 						matrix[i][j] = false;
-					}
 				}
 			}
 		}
@@ -95,11 +85,11 @@ void fillMatrix(bool** matrix, int* set, int c, unsigned int r) {
 
 }
 
-int* traceSubset(bool** matrix, int* set, int c, unsigned int r, int* subset_size) {
+int* traceSubset(bool** matrix, int* set, int c, long long int r, int* subset_size) {
 	(*subset_size) = 0;
 	int* solution = NULL;
 	int i = c - 1;
-	unsigned int j = r - 1;
+	long long int j = r - 1;
 	while (i >= 0) {
 		if (i == 0 && matrix[i][j] == true) {
 			(*subset_size)++;
@@ -133,7 +123,7 @@ int* traceSubset(bool** matrix, int* set, int c, unsigned int r, int* subset_siz
 	return solution;
 }
 
-int* subsetSum(int* set, unsigned int sum, int n, int* subset_size) {
+int* subsetSum(int* set, long long int sum, int n, int* subset_size) {
 	int* solution = (int*)malloc(sizeof(int));
 	if (solution == NULL) {
 		printf("Memory allocation error in subsetSum\n");
@@ -165,7 +155,7 @@ int* subsetSum(int* set, unsigned int sum, int n, int* subset_size) {
 
 int labSolution(const char* input, const char* output) {
 	int* a = NULL;
-	unsigned int b = -1;
+	long long int b = -1;
 	int n = -1;
 	int subset_size = -1;
 	a = readFile(input, &b, &n);
