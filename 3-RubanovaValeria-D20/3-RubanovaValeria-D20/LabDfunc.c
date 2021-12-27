@@ -89,7 +89,6 @@ void fillMatrix(bool** matrix, int* set, int c, long long int r) {
 					else
 						matrix[i][j] = false;
 				}
-				}
 			}
 		}
 	}
