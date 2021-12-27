@@ -73,11 +73,22 @@ void fillMatrix(bool** matrix, int* set, int c, long long int r) {
 				}
 			}
 			else {
-				if ((matrix[i - 1][j] == true) || matrix[i - 1][j - (long long int)set[i]] == true) {
+				if ((matrix[i - 1][j] == true)) {
 					matrix[i][j] = true;
 				}
 				else {
+					if (j >= set[i]) {
+						if (matrix[i - 1][j - (long long int)set[i]] == true) {
+							matrix[i][j] = true;
+						}
+						else {
+							matrix[i][j] = false;
+						}
+
+					}
+					else
 						matrix[i][j] = false;
+				}
 				}
 			}
 		}
