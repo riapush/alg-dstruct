@@ -1,0 +1,161 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct aa {
+	int data;
+	int lvl;
+	struct aa* l;
+	struct aa* r;
+
+}aa;
+
+static aa* bottom = NULL;
+static aa* deleted = NULL;
+static aa* last = NULL;
+
+void treeInnit(void);
+aa* createNode(int data, int lvl, aa* l, aa* r);
+aa* skew(aa* tree);
+aa* split(aa* tree);
+aa* insertTree(int data, aa* tree);
+aa* removeFromTree(int data, aa* tree);
+int searchTree(int data, aa* tree);
+void destroy(aa* tree);
+int solution(FILE* stream_in, FILE* stream_out);
+
+int main(void) {
+	treeInnit();
+	solution(stdin, stdout);
+	return 0;
+}
+
+void treeInnit(void) {
+	if (!bottom) {
+		bottom = (aa*)malloc(sizeof(aa));
+		if (!bottom) fprintf(stderr, "Memory allocation error!\n");
+		else {
+			bottom->lvl = 0;
+			bottom->l = NULL;
+			bottom->r = NULL;
+			deleted = bottom;
+		}
+	}
+}
+
+aa* createNode(int data, int lvl, aa* l, aa* r) {
+	aa* node = (aa*)malloc(sizeof(aa));
+	if (!node) fprintf(stderr, "Memory allocation error!\n");
+	else {
+		node->data = data;
+		node->lvl = lvl;
+		node->l = l;
+		node->r = r;
+	}
+	return node;
+}
+
+aa* skew(aa* tree) {
+	if (!tree) return NULL;
+	if (!tree->l) return tree;
+	if (tree->lvl == tree->l->lvl) { // swap the pointers of horizontal left links.
+		aa* node = tree;
+		tree = tree->l;
+		node->l = tree->r;
+		tree->r = node;
+	}
+	return tree;
+}
+
+aa* split(aa* tree) {
+	if (!tree) return NULL;
+	if (!tree->r || !tree->r->r) return tree;
+	if (tree->lvl == tree->r->r->lvl) { // we have two horizontal right links.  Take the middle node, elevate it, and return it.
+		aa* node = tree;
+		tree = tree->r;
+		node->r = tree->l;
+		tree->l = node;
+		++tree->lvl;
+	}
+	return tree;
+}
+
+aa* insertTree(int data, aa* tree) {
+	if (tree == bottom || !tree) tree = createNode(data, 1, bottom, bottom);
+	if (data < tree->data) tree->l = insertTree(data, tree->l);
+	else if (data > tree->data) tree->r = insertTree(data, tree->r);
+	tree = skew(tree);
+	tree = split(tree);
+	return tree;
+}
+
+aa* removeFromTree(int data, aa* tree) {
+	if (tree != bottom && tree) {
+		last = tree;
+		if (data < tree->data) tree->l = removeFromTree(data, tree->l);
+		else {
+			deleted = tree;
+			tree->r = removeFromTree(data, tree->r);
+		}
+		if (tree == last && deleted != bottom && data == deleted->data) {
+			deleted->data = tree->data;
+			deleted = bottom;
+			tree = tree->r;
+			free(last);
+		}
+		else if ((tree->l->lvl < tree->lvl - 1) || (tree->r->lvl < tree->lvl - 1)) {
+			--tree->lvl;
+			if (tree->r->lvl > tree->lvl) tree->r->lvl = tree->lvl;
+			tree = skew(tree);
+			tree->r = skew(tree->r);
+			tree->r->r = skew(tree->r->r);
+			tree = split(tree);
+			tree->r = split(tree->r);
+		}
+	}
+	return tree;
+}
+
+int searchTree(int data, aa* tree) {
+	aa* node = tree;
+	while (node) {
+		if (node == bottom) return 0;
+		if (node->data == data) return 1;
+		else if (node->data < data) node = node->r;
+		else node = node->l;
+	}
+	return 0;
+}
+
+void destroy(aa* tree) {
+	if (tree == bottom || !tree) return;
+	destroy(tree->l);
+	destroy(tree->r);
+	free(tree);
+}
+
+int solution(FILE* stream_in, FILE* stream_out) {
+	char line_buff[16] = " ";
+	char action;
+	int num;
+	aa* tree = NULL;
+	while (fgets(line_buff, 16, stream_in)) {
+		sscanf(line_buff, "%c%i", &action, &num);
+		switch (action) {
+		case 'a':
+			tree = insertTree(num, tree);
+			break;
+		case 'r':
+			tree = removeFromTree(num, tree);
+			break;
+		case 'f':
+			if (searchTree(num, tree)) fprintf(stream_out, "yes\n");
+			else fprintf(stream_out, "no\n");
+			break;
+		default:
+			destroy(tree);
+			return 0;
+		}
+	}
+}
