@@ -8,10 +8,12 @@ typedef struct aa {
 
 }aa;
 
+void treeInnit(void);
+aa* createNode(int data, int lvl, aa* l, aa* r);
 aa* skew(aa* tree);
 aa* split(aa* tree);
-aa* insert(aa* tree, const int data);
-aa* removeFromTree(aa* tree, const int data);
-aa* search(const aa* tree, const int data);
+aa* insertTree(int data, aa* tree);
+aa* removeFromTree(int data, aa* tree);
+int searchTree(int data, aa* tree);
 void destroy(aa* tree);
 int solution(FILE* stream_in, FILE* stream_out);
