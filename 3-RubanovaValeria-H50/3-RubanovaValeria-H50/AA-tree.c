@@ -3,14 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct aa {
-	int data;
-	int lvl;
-	struct aa* l;
-	struct aa* r;
-
-}aa;
-
 static aa* bottom = NULL;
 static aa* deleted = NULL;
 static aa* last = NULL;
@@ -117,35 +109,4 @@ void destroy(aa* tree) {
 	destroy(tree->l);
 	destroy(tree->r);
 	free(tree);
-}
-
-int solution(FILE* stream_in, FILE* stream_out) {
-	char line_buff[16] = " ";
-	char action;
-	int num;
-	aa* tree = NULL;
-	while (fgets(line_buff, 16, stream_in)) {
-		sscanf(line_buff, "%c%i", &action, &num);
-		switch (action) {
-		case 'a':
-			tree = insertTree(num, tree);
-			break;
-		case 'r':
-			tree = removeFromTree(num, tree);
-			break;
-		case 'f':
-			if (searchTree(num, tree)) fprintf(stream_out, "yes\n");
-			else fprintf(stream_out, "no\n");
-			break;
-		default:
-			destroy(tree);
-			return 0;
-		}
-	}
-}
-
-int main(void) {
-	treeInnit();
-	solution(stdin, stdout);
-	return 0;
 }

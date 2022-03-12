@@ -129,7 +129,11 @@ int searchTree(int data, aa* tree) {
 }
 
 void destroy(aa* tree) {
-	if (tree == bottom || !tree) return;
+	if (tree == bottom) {
+		free(tree);
+		return;
+	}
+	if (!tree) return;
 	destroy(tree->l);
 	destroy(tree->r);
 	free(tree);
