@@ -10,6 +10,10 @@ static aa* last = NULL;
 void treeInnit(void) {
 	if (!bottom) {
 		bottom = (aa*)malloc(sizeof(aa));
+		if (!bottom) {
+			fprintf(stderr, "Memory allocation error!\n");
+			return NULL;
+		}
 		if (!bottom) fprintf(stderr, "Memory allocation error!\n");
 		else {
 			bottom->lvl = 0;
@@ -22,7 +26,10 @@ void treeInnit(void) {
 
 aa* createNode(int data, int lvl, aa* l, aa* r) {
 	aa* node = (aa*)malloc(sizeof(aa));
-	if (!node) fprintf(stderr, "Memory allocation error!\n");
+	if (!node) {
+		fprintf(stderr, "Memory allocation error!\n");
+		return NULL;
+	}
 	else {
 		node->data = data;
 		node->lvl = lvl;
@@ -58,7 +65,13 @@ aa* split(aa* tree) {
 }
 
 aa* insertTree(int data, aa* tree) {
-	if (tree == bottom || !tree) tree = createNode(data, 1, bottom, bottom);
+	if (tree == bottom || !tree) {
+		tree = createNode(data, 1, bottom, bottom);
+		if (!tree) {
+			fprintf(stderr, "Memory allocation error!\n");
+			return NULL;
+		}
+	}
 	if (data < tree->data) tree->l = insertTree(data, tree->l);
 	else if (data > tree->data) tree->r = insertTree(data, tree->r);
 	tree = skew(tree);
