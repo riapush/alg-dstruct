@@ -34,10 +34,7 @@ int main(void) {
 void treeInnit(void) {
 	if (!bottom) {
 		bottom = (aa*)malloc(sizeof(aa));
-		if (!bottom) { 
-			fprintf(stderr, "Memory allocation error!\n"); 
-			return NULL;
-		}
+		if (!bottom) fprintf(stderr, "Memory allocation error!\n"); 
 		else {
 			bottom->lvl = 0;
 			bottom->l = NULL;
@@ -90,10 +87,7 @@ aa* split(aa* tree) {
 aa* insertTree(int data, aa* tree) {
 	if (tree == bottom || !tree) {
 		tree = createNode(data, 1, bottom, bottom);
-		if (!tree) {
-			fprintf(stderr, "Memory allocation error!\n");
-			return NULL;
-		}
+		if (!tree) return NULL;
 	}
 	if (data < tree->data) tree->l = insertTree(data, tree->l);
 	else if (data > tree->data) tree->r = insertTree(data, tree->r);
@@ -161,6 +155,7 @@ int solution(FILE* stream_in, FILE* stream_out) {
 		switch (action) {
 		case 'a':
 			tree = insertTree(num, tree);
+			if (!tree) return 0;
 			break;
 		case 'r':
 			tree = removeFromTree(num, tree);
@@ -171,6 +166,7 @@ int solution(FILE* stream_in, FILE* stream_out) {
 			break;
 		default:
 			destroy(tree);
+			free(bottom);
 			return 0;
 		}
 	}
