@@ -13,8 +13,8 @@ void treeInnit(void) {
 		if (!bottom) fprintf(stderr, "Memory allocation error!\n");
 		else {
 			bottom->lvl = 0;
-			bottom->l = NULL;
-			bottom->r = NULL;
+			bottom->l = bottom;
+			bottom->r = bottom;
 			deleted = bottom;
 		}
 	}
