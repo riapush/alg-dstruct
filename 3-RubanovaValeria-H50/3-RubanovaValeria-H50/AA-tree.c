@@ -1,11 +1,7 @@
-#include "LabH.h"
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
-
-static aa* bottom = NULL;
-static aa* deleted = NULL;
-static aa* last = NULL;
+#include "LabH.h"
 
 void treeInnit(void) {
 	if (!bottom) {
@@ -111,7 +107,8 @@ int searchTree(int data, aa* tree) {
 }
 
 void destroy(aa* tree) {
-	if (tree == bottom || !tree) return;
+	if (tree == bottom) free(bottom);
+	if (!tree) return;
 	destroy(tree->l);
 	destroy(tree->r);
 	free(tree);
