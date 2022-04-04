@@ -25,7 +25,8 @@ extern "C" {
 	aa* removeFromTree(int data, aa* tree);
 	int searchTree(int data, aa* tree);
 	void destroy(aa* tree);
-	int solution(FILE* stream_in, FILE* stream_out); 
+	int solution(FILE* stream_in, FILE* stream_out);
+	void treeDestroy(void);
 #ifdef __cplusplus
 }
 #endif
