@@ -17,7 +17,7 @@ extern "C" {
 	static aa* deleted = NULL;
 	static aa* last = NULL;
 
-	void treeInnit(void);
+	void treeInit(void);
 	aa* createNode(int data, int lvl, aa* l, aa* r);
 	aa* skew(aa* tree);
 	aa* split(aa* tree);

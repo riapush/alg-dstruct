@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "LabH.h"
 
-void treeInnit(void) {
+void treeInit(void) {
 	if (!bottom) {
 		bottom = (aa*)malloc(sizeof(aa));
 		if (!bottom) fprintf(stderr, "Memory allocation error!\n");
@@ -107,7 +107,11 @@ int searchTree(int data, aa* tree) {
 }
 
 void destroy(aa* tree) {
-	if (tree == bottom || !tree) return;
+	if (!tree->r && !tree->l) {
+		free(tree);
+		return;
+	}
+	if (!tree) return;
 	destroy(tree->l);
 	destroy(tree->r);
 	free(tree);

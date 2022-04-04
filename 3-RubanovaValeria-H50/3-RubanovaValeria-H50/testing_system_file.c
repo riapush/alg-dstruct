@@ -15,7 +15,7 @@ static aa* bottom = NULL;
 static aa* deleted = NULL;
 static aa* last = NULL;
 
-void treeInnit(void);
+void treeInit(void);
 aa* createNode(int data, int lvl, aa* l, aa* r);
 aa* skew(aa* tree);
 aa* split(aa* tree);
@@ -26,15 +26,15 @@ void destroy(aa* tree);
 int solution(FILE* stream_in, FILE* stream_out);
 
 int main(void) {
-	treeInnit();
+	treeInit();
 	solution(stdin, stdout);
 	return 0;
 }
 
-void treeInnit(void) {
+void treeInit(void) {
 	if (!bottom) {
 		bottom = (aa*)malloc(sizeof(aa));
-		if (!bottom) fprintf(stderr, "Memory allocation error!\n"); 
+		if (!bottom) fprintf(stderr, "Memory allocation error!\n");
 		else {
 			bottom->lvl = 0;
 			bottom->l = bottom;
@@ -46,8 +46,8 @@ void treeInnit(void) {
 
 aa* createNode(int data, int lvl, aa* l, aa* r) {
 	aa* node = (aa*)malloc(sizeof(aa));
-	if (!node) { 
-		fprintf(stderr, "Memory allocation error!\n"); 
+	if (!node) {
+		fprintf(stderr, "Memory allocation error!\n");
 		return NULL;
 	}
 	else {
@@ -135,7 +135,7 @@ int searchTree(int data, aa* tree) {
 }
 
 void destroy(aa* tree) {
-	if (tree == bottom) {
+	if (!tree->r && !tree->l ) {
 		free(tree);
 		return;
 	}
