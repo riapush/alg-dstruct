@@ -1,8 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "23tree.h"
-#define _CRT_SECURE_NO_WARNINGS
-#pragma warning(disable : 4996)
+
+
+typedef struct node {
+	struct node* parent;
+	int keys[3];
+	struct node* first;
+	struct node* second;
+	struct node* third;
+	struct node* fourth;
+	int size;
+} node;
+
+node* createNode(int data, node* first, node* second, node* third, node* fourth, node* parent);
+int find(int data, int* keys, int size);
+void swap(int* x, int* y);
+void sortTwoElements(int* x, int* y);
+void sortThreeElements(int* x, int* y, int* z);
+void sortKeys(int size, int* keys);
+void insertToNode(int data, node* tree);
+void deleteKey(int data, node* tree);
+void changeTo2Node(int data, node* tree, node* first, node* second);
+char isLeaf(node* tree);
+node* insertTree(node* tree, int value);
+node* searchMin(node* tree);
+node* deleteNode(node* tree, int value);
+node* split(node* item);
+node* searchTree(node* tree, int value);
+node* fix(node* leaf);
+node* merge(node* leaf);
+node* redistribute(node* leaf);
+void printTree(node* tree, int n);
+void destroyTree(node* tree);
+int solution(FILE* stream_in, FILE* stream_out);
+
 #define BUFFER_SIZE 16
 
 node* createNode(int data, node* first, node* second, node* third, node* fourth, node* parent) {
@@ -427,4 +458,37 @@ void destroyTree(node* tree) {
 	destroyTree(tree->second);
 	destroyTree(tree->third);
 	free(tree);
+}
+
+int solution(FILE* stream_in, FILE* stream_out) {
+	char buffer[BUFFER_SIZE] = { 0 };
+	char action;
+	int data;
+	node* tree = NULL;
+	while (fgets(buffer, BUFFER_SIZE, stream_in)) {
+		sscanf(buffer, "%c %i", &action, &data);
+		switch (action) {
+		case 'a':
+			tree = insertTree(tree, data);
+			break;
+		case 'r':
+			tree = deleteNode(tree, data);
+			break;
+		case 'f':
+			if (searchTree(tree, data))
+				fprintf(stream_out, "yes\n");
+			else
+				fprintf(stream_out, "no\n");
+			break;
+		default:
+			destroyTree(tree);
+			return 0;
+		}
+	}
+	destroyTree(tree);
+	return 0;
+}
+
+int main(void) {
+	solution(stdin, stdout);
 }
