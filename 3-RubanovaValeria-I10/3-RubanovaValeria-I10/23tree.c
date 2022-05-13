@@ -136,11 +136,17 @@ node* split(node* tree) {
 	if (tree->size < 3) return tree;
 
 	node* a = createNode(tree->keys[0], tree->first, tree->second, NULL, NULL, tree->parent);
+	if (!a) return NULL;
+
 	node* b = createNode(tree->keys[2], tree->third, tree->fourth, NULL, NULL, tree->parent);
-	if (!a || !b) return NULL;
+	if (!b) {
+		free(a);
+		return NULL;
+	}
 
 	if (a->first) a->first->parent = a;
 	if (a->second) a->second->parent = a;
+
 	if (b->first) b->first->parent = b;
 	if (b->second) b->second->parent = b;
 
