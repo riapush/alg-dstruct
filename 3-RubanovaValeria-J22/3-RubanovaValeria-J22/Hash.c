@@ -9,17 +9,18 @@ typedef struct {
 	int deleted;
 } node;
 
-node* map;
 
 const int size = 524288;
 
-void hashMap(void) {
-	map = (node*)malloc(size * sizeof(node));
-	if (!map) return;
+node* init(void) {
+	node* map = (node*)malloc(size * sizeof(node));
+	if (!map)
+		return NULL;;
 	for (int i = 0; i < size; i++) {
 		map[i].str = NULL;
 		map[i].deleted = 0;
 	}
+	return map;
 }
 
 int hash(const char *str, int iter) {
@@ -31,12 +32,12 @@ int hash(const char *str, int iter) {
 		h1 = c0 * h1 + str[i];
 	h1 = h1 % size;
 
-	int h2 = (int)(h1 + c1 * iter + c2 * iter*iter) % size;
+	int h2 = (int)(h1 + c1 * iter + c2 * iter * iter) % size;
 
 	return h2;
 }
 
-int search(const char* str) {
+int search(const char* str, node* map) {
 	int h = hash(str, 0);
 	int i = 0;
 	while (map[h].str && i < size) {
@@ -49,13 +50,13 @@ int search(const char* str) {
 	return 0;
 }
 
-void insert(const char* str) {
+int insert(const char* str, node* map) {
 	int i = 0;
 	int h = hash(str, 0);
 	int first_deleted = -1;
 	while (map[h].str && i < size) {
 		if (strcmp(map[h].str, str) == 0 && !map[h].deleted) {
-			return;
+			return 1;
 		}
 		if (map[h].deleted && first_deleted == -1) {
 			first_deleted = h;
@@ -66,16 +67,20 @@ void insert(const char* str) {
 
 	if (first_deleted != -1) {
 		map[first_deleted].str = (char*)malloc((strlen(str) + 1) * sizeof(char));
+		if (!map[first_deleted].str)
+			return -1;
 		strcpy(map[first_deleted].str, str);
 		map[first_deleted].deleted = 0;
 	}
 	else {
 		map[h].str = (char*)malloc((strlen(str) + 1) * sizeof(char));
+		if (!map[h].str)
+			return -1;
 		strcpy(map[h].str, str);
 	}
 }
 
-void removeElement(const char* str) {
+void removeElement(const char* str, node* map) {
 	int h = hash(str, 0);
 	int i = 0;
 	while (map[h].str && i < size) {
@@ -88,38 +93,44 @@ void removeElement(const char* str) {
 	}
 }
 
-void destroyHashMap(void) {
+void destroyHashMap(node* map) {
 	if (!map) return;
 	for (int i = 0; i < size; i++)
 		free(map[i].str);
 	free(map);
-	map = NULL;
 }
 
 int main() {
-	hashMap();
+	node* map = init();
+	if (!map) {
+		printf("memory allocation error");
+		return 0;
+	}
 	char action;
 	char str[10000];
 	while (scanf("%c", &action) > 0) {
 		switch (action) {
 		case 'a':
 			scanf("%s", &str);
-			insert(str);
+			int check = insert(str, map);
+			if (check == -1) {
+				printf("memory allocation error. unable to add element\n");
+			}
 			break;
 		case 'f':
 			scanf("%s", &str);
-			if (search(str))
+			if (search(str, map))
 				printf("%s", "yes\n");
 			else
 				printf("%s", "no\n");
 			break;
 		case 'r':
 			scanf("%s", &str);
-			removeElement(str);
+			removeElement(str, map);
 			break;
 		}
 	}
-	destroyHashMap();
+	destroyHashMap(map);
 
 	return 0;
 }
