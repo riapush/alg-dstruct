@@ -37,7 +37,7 @@ int hash(const char *str, int iter) {
 	return h2;
 }
 
-int search(const char* str, node* map) {
+int search(const char* str, node const* map) {
 	int h = hash(str, 0);
 	int i = 0;
 	while (map[h].str && i < size) {
@@ -66,16 +66,21 @@ int insert(const char* str, node* map) {
 	}
 
 	if (first_deleted != -1) {
+		if (map[first_deleted].str) {
+			free(map[first_deleted].str);
+		}
 		map[first_deleted].str = (char*)malloc((strlen(str) + 1) * sizeof(char));
-		if (!map[first_deleted].str)
-			return -1;
+		if (!map[first_deleted].str) {
+			return 0;
+		}
 		strcpy(map[first_deleted].str, str);
 		map[first_deleted].deleted = 0;
 	}
 	else {
 		map[h].str = (char*)malloc((strlen(str) + 1) * sizeof(char));
-		if (!map[h].str)
-			return -1;
+		if (!map[h].str) {
+			return 0;
+		}
 		strcpy(map[h].str, str);
 	}
 }
